@@ -196,34 +196,6 @@ window.getTeams = async (tournamentId) => {
 };
 window.tournamentFields = {};
 
-window.loadTournamentInfo = async () => {
-
-  const snapshot = await getDoc(
-    doc(
-      db,
-      'tournaments',
-      window.tournamentId
-    )
-  );
-
-  const tournament =
-    snapshot.data();
-
-  window.tournamentInfo =
-    tournament;
-
-  
-document.getElementById(
-  'pageTitle'
-).textContent =
-  `${  window.tournamentInfo.name} Calendar Exporter`;
-
-  
-  window.tournamentFields =
-    tournament.fields;
-//  console.log('fields loaded',tournament.fields );
-
-};
 window.getMatches = async (tournamentId) => {
 
   const snapshot = await getDocs(
@@ -471,6 +443,7 @@ window.renderMatches = (
 
 const now = new Date();
 
+  
 const upcomingMatches =
   playingMatches.filter(match =>
     buildDateTime(
@@ -590,8 +563,11 @@ if (eventIsOver) {
     </p>
   `;
 
+  if (upcomingMatches.length > 0) {
+
   html += `
-<h3>Upcoming Games</h3>
+    <h3>Upcoming Games</h3>
+
     <table border="1" cellpadding="6">
       <tr>
         <th>Time</th>
@@ -630,8 +606,16 @@ if (eventIsOver) {
     `;
 
   });
+  
+html += `
+  </table>
+`;
+  }
 
-  html += `
+  
+ if (playedMatches.length > 0) {
+
+    html += `
 <h3>Played Games</h3>
     <table border="1" cellpadding="6">
       <tr>
@@ -675,7 +659,7 @@ if (eventIsOver) {
   html += `
     </table>
   `;
-
+ }
 
   if (
   refereeMatches.length > 0
@@ -832,23 +816,34 @@ if (!window.selectedTeam) {
   return;
 }
   
-  const calendarEvents = [
+const now = new Date();
 
-   ...window.currentUpcomingMatches.map(
-      match => ({
-        type: 'PLAYING',
-        ...match
-      })
-    ),
+const upcomingRefereeMatches =
+  window.currentRefereeMatches.filter(
+    match =>
+      buildDateTime(
+        match.day,
+        match.st
+      ) > now
+  );
 
-    ...window.currentRefereeMatches.map(
-      match => ({
-        type: 'REFEREE',
-        ...match
-      })
-    )
+const calendarEvents = [
 
-  ];
+  ...window.currentUpcomingMatches.map(
+    match => ({
+      type: 'PLAYING',
+      ...match
+    })
+  ),
+
+  ...upcomingRefereeMatches.map(
+    match => ({
+      type: 'REFEREE',
+      ...match
+    })
+  )
+
+];
 
   calendarEvents.sort(
     (a, b) =>
