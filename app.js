@@ -146,7 +146,24 @@ return false;
 
     const snapshot =
       await getDocs(q);
-    
+    console.log(
+  'First tournament date:',
+  snapshot.docs[0]?.data().date
+);
+
+console.log(
+  'Last tournament date:',
+  snapshot.docs[
+    snapshot.docs.length - 1
+  ]?.data().date
+);
+
+console.log(
+  'Sample dates:',
+  snapshot.docs
+    .slice(0, 20)
+    .map(doc => doc.data().date)
+);
 console.log(
   'Big Bowl in snapshot:',
   snapshot.docs.find(
