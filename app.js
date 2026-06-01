@@ -418,12 +418,6 @@ const teamMatches = [
 
   window.currentTeam = team;
 
-  window.currentUpcomingMatches =
-    upcomingMatches;
-
-  window.currentRefereeMatches =
-    refereeMatches;
-
   return teamMatches;
 
 };
@@ -472,6 +466,13 @@ const playedMatches =
       match.st
     ) <= now
   );
+
+window.currentUpcomingMatches =
+    upcomingMatches;
+
+  window.currentRefereeMatches =
+    refereeMatches;
+  
 const generateButton =
   document.getElementById(
     'generateBtn'
@@ -568,7 +569,7 @@ generateButton.disabled =
       </tr>
   `;
 
-  playingMatches.forEach(match => {
+  playedMatches.forEach(match => {
 
     html += `
       <tr>
