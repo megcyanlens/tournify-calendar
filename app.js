@@ -79,11 +79,6 @@ window.renderTournamentPicker =
 
     });
 
-    const search =
-      document.getElementById(
-        'tournamentSearch'
-      );
-
 const search =
   document.getElementById(
     'tournamentSearch'
