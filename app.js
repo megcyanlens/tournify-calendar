@@ -810,7 +810,7 @@ html += `
       </div>
 
       <div class="stat-label">
-        Playing
+        Upcoming
       </div>
 
     </div>
