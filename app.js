@@ -309,14 +309,40 @@ window.getMatchesForTeam = async (team) => {
   }));
     window.allMatches = matches;
 
-  const teamMatches = matches.filter(match =>
-    match.team1 === team.numInPoule0 ||
-    match.team2 === team.numInPoule0 ||
+const playingMatches = matches.filter(
+  match =>
+    match.poule === team.poule0 &&
+    (
+      match.team1 === team.numInPoule0 ||
+      match.team2 === team.numInPoule0
+    )
+);
+
+const refereeMatches = matches.filter(
+  match =>
     match.referee === team.id
-  );
+);
+
+const teamMatches = [
+  ...playingMatches,
+  ...refereeMatches
+];
 
   console.log('team', team.name);
-  console.log('matches', teamMatches.length);
+  console.log(
+  'playing',
+  playingMatches.length
+);
+
+console.log(
+  'refereeing',
+  refereeMatches.length
+);
+
+console.log(
+  'total',
+  teamMatches.length
+);
 
   console.table(
     teamMatches.map(match => ({
