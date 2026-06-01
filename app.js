@@ -215,19 +215,7 @@ window.testFirestore = async () => {
 
   const snapshot =
     await getDocs(collection(db, 'tournaments'));
-
-//  console.log(
- //   'count:',
- //   snapshot.docs.length
-//  );
-
-  //console.log(
-   // snapshot.docs.slice(0, 3).map(doc => ({
-   //   id: doc.id,
-    //  ...doc.data()
-  //  }))
- // );
-
+ 
   return snapshot.docs.length;
 
 };
