@@ -548,15 +548,7 @@ generateButton.disabled =
 
 }
 
-  generateButton.textContent =
-    'No Upcoming Games';
-
-} else {
-
-  generateButton.textContent =
-    'Generate Calendar';
-
-}
+ 
   let html = '';
 
 if (eventIsOver) {
@@ -576,7 +568,7 @@ if (eventIsOver) {
 
 }
   
-  let html = `
+  html += `
     <h2>${team.name}</h2>
 
     <p>
@@ -735,8 +727,8 @@ if (eventIsOver) {
     </table>
   `;
 
-  results.innerHTML = html;
   }
+    results.innerHTML = html;
 };
 
 function buildDateTime(
