@@ -359,6 +359,17 @@ window.renderMatches = (
       'results'
     );
 
+    const teamLookup = {};
+    
+    window.bigBowlTeams.forEach(team => {
+    
+      teamLookup[
+        `${team.poule0}-${team.numInPoule0}`
+      ] = team.name;
+    
+    });
+
+  
   let html = `
     <h2>${team.name}</h2>
 
@@ -399,8 +410,21 @@ window.renderMatches = (
       <tr>
         <td>${match.st}</td>
         <td>${match.field}</td>
-        <td>${match.team1}</td>
-        <td>${match.team2}</td>
+     <td>
+  ${
+    teamLookup[
+      `${match.poule}-${match.team1}`
+    ] || match.team1
+  }
+</td>
+
+<td>
+  ${
+    teamLookup[
+      `${match.poule}-${match.team2}`
+    ] || match.team2
+  }
+</td>
       </tr>
     `;
 
