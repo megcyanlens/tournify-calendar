@@ -146,6 +146,8 @@ return false;
 
     const snapshot =
       await getDocs(q);
+
+    
     console.log(
   'First tournament date:',
   snapshot.docs[0]?.data().date
@@ -211,6 +213,10 @@ console.log(
         'block';
     return true;
   };
+
+
+
+
 
 function getEventDurationMinutes() {
 
@@ -287,6 +293,16 @@ window.getUpcomingTournaments =
       now +
       (10 * 24 * 60 * 60);
 
+console.log(
+  'now',
+  now
+);
+
+console.log(
+  'daysLimit',
+  daysLimit
+);
+    
     const q = query(
       collection(
         db,
@@ -308,6 +324,28 @@ window.getUpcomingTournaments =
     const snapshot =
       await getDocs(q);
 
+console.log(
+  'snapshot size:',
+  snapshot.size
+);
+
+console.log(
+  snapshot.docs
+    .slice(0, 20)
+    .map(doc => ({
+      name: doc.data().name,
+      liveLink: doc.data().liveLink,
+      date: doc.data().date
+    }))
+);
+    console.log(
+  'Big Bowl in upcoming query:',
+  snapshot.docs.find(
+    doc =>
+      doc.data().liveLink ===
+      'bigbowl2026'
+  )
+);
     const tournaments =
       snapshot.docs
         .map(doc => ({
