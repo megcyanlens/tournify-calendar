@@ -207,55 +207,75 @@ window.findLondonFireMatches = async () => {
 
 window.loadTeams = async () => {
 
-  const snapshot = await getDocs(
-    collection(
-      db,
-      'tournaments',
-      TOURNAMENT_ID,
-      'teams'
-    )
-  );
+  try {
 
-  const teams =
-    snapshot.docs
-      .map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }))
-      .sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
+    console.log('loading teams');
 
-  const select =
-    document.getElementById(
-      'teamSelect'
+    const snapshot = await getDocs(
+      collection(
+        db,
+        'tournaments',
+        TOURNAMENT_ID,
+        'teams'
+      )
     );
 
-  select.innerHTML = '';
+    console.log(
+      'team docs:',
+      snapshot.docs.length
+    );
 
-  teams.forEach(team => {
+    const teams =
+      snapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
 
-    const option =
-      document.createElement('option');
+    const select =
+      document.getElementById(
+        'teamSelect'
+      );
 
-    option.value =
-      team.id;
+    console.log(
+      'select:',
+      select
+    );
 
-    option.textContent =
-      team.name;
+    select.innerHTML = '';
 
-    select.appendChild(option);
+    teams.forEach(team => {
 
-  });
+      const option =
+        document.createElement('option');
 
-window.bigBowlTeams = teams;
+      option.value = team.id;
+      option.textContent = team.name;
 
-if (teams.length) {
-  select.value = teams[0].id;
-}
-  select.dispatchEvent(
-  new Event('change')
-);
+      select.appendChild(option);
+
+    });
+
+    console.log(
+      'loaded',
+      teams.length,
+      'teams'
+    );
+
+    window.bigBowlTeams = teams;
+
+  } catch (error) {
+
+    console.error(
+      'loadTeams failed',
+      error
+    );
+
+  }
+
 };
 document
   .getElementById('teamSelect')
