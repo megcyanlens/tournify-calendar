@@ -1,0 +1,269 @@
+(async () => {
+
+  const detectTimezone = venue => {
+
+    const text = (venue || '').toLowerCase();
+
+    const mappings = [
+      [['deutschland', 'germany'], 'Europe/Berlin'],
+      [['slovenia', 'slovenija'], 'Europe/Ljubljana'],
+      [['england', 'united kingdom', 'uk'], 'Europe/London'],
+      [['italy', 'italia'], 'Europe/Rome'],
+      [['france'], 'Europe/Paris'],
+      [['netherlands'], 'Europe/Amsterdam'],
+      [['poland'], 'Europe/Warsaw'],
+      [['spain'], 'Europe/Madrid'],
+      [['portugal'], 'Europe/Lisbon'],
+      [['czech republic', 'czechia'], 'Europe/Prague'],
+      [['austria'], 'Europe/Vienna'],
+      [['switzerland'], 'Europe/Zurich']
+    ];
+
+    for (const [keywords, timezone] of mappings) {
+      if (keywords.some(k => text.includes(k))) {
+        return timezone;
+      }
+    }
+
+    return 'Europe/Berlin';
+  };
+
+  const downloadFile = (filename, content) => {
+
+    const blob = new Blob(
+      [content],
+      { type: 'text/calendar;charset=utf-8' }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+  };
+
+  const monthMap = {
+    January: '01',
+    February: '02',
+    March: '03',
+    April: '04',
+    May: '05',
+    June: '06',
+    July: '07',
+    August: '08',
+    September: '09',
+    October: '10',
+    November: '11',
+    December: '12'
+  };
+
+  const tournamentName =
+    document.querySelector('.tournament-title')
+      ?.innerText
+      ?.trim();
+
+  const teamName =
+    document.querySelector('.TeamDetailsTeamName')
+      ?.innerText
+      ?.trim();
+
+  const tournamentDateText =
+    document.querySelector('.tournament-date')
+      ?.innerText
+      ?.trim();
+
+  const yearMatch =
+    tournamentDateText.match(/\b(20\d\d)\b/);
+
+  const year =
+    yearMatch ? yearMatch[1] : new Date().getFullYear();
+
+  const venue = prompt(
+    'Tournament Venue',
+    localStorage.getItem('tournifyVenue') || ''
+  );
+
+  if (!venue) return;
+
+  localStorage.setItem(
+    'tournifyVenue',
+    venue
+  );
+
+  const timezone =
+  detectTimezone(venue);
+
+  if (!timezone) return;
+
+  localStorage.setItem(
+    'tournifyTimezone',
+    timezone
+  );
+
+  const duration =
+    parseInt(
+      prompt(
+        'Game duration in minutes (30, 40, 60)',
+        localStorage.getItem('tournifyDuration') || '30'
+      ),
+      10
+    );
+
+  localStorage.setItem(
+    'tournifyDuration',
+    duration
+  );
+
+  const matches = [
+  ...document.querySelectorAll('#upcoming .Match')
+];
+
+  const createDateTime = (dateText, timeText) => {
+
+    const match =
+      dateText.match(
+        /\w+\s+(\d+)\s+(\w+)/
+      );
+
+    const day =
+      match[1].padStart(2, '0');
+
+    const month =
+      monthMap[match[2]];
+
+    const [hour, minute] =
+      timeText.split(':');
+
+    return `${year}${month}${day}T${hour}${minute}00`;
+  };
+
+  const addMinutes = (
+    dateTime,
+    minutes
+  ) => {
+
+    const yyyy = dateTime.slice(0,4);
+    const mm = dateTime.slice(4,6);
+    const dd = dateTime.slice(6,8);
+    const hh = dateTime.slice(9,11);
+    const mi = dateTime.slice(11,13);
+
+    const date = new Date(
+      `${yyyy}-${mm}-${dd}T${hh}:${mi}:00`
+    );
+
+    date.setMinutes(
+      date.getMinutes() + minutes
+    );
+
+    return (
+      date.getFullYear() +
+      String(date.getMonth() + 1).padStart(2,'0') +
+      String(date.getDate()).padStart(2,'0') +
+      'T' +
+      String(date.getHours()).padStart(2,'0') +
+      String(date.getMinutes()).padStart(2,'0') +
+      '00'
+    );
+  };
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Tournify Exporter//EN',
+    `X-WR-CALNAME:${tournamentName} - ${teamName}`
+  ];
+
+  matches.forEach((match, index) => {
+
+    const teams =
+      [...match.querySelectorAll('.TeamName span')]
+        .map(t => t.innerText.trim());
+
+    const footerItems =
+      [...match.querySelectorAll('.MatchFooter .Referee')]
+        .map(el => el.innerText.trim());
+
+    const refereeTeams =
+      footerItems.slice(1);
+    
+    const isRefereeing =
+      refereeTeams.includes(teamName);
+    
+    const title =
+      isRefereeing
+        ? `(REFEREE) - ${teams[0]} vs ${teams[1]}`
+        : `${teams[0]} vs ${teams[1]}`;
+
+    const field =
+      match.querySelector('.MatchField > div')
+        ?.innerText
+        ?.trim();
+
+    const group =
+      match.querySelector('.MatchPoule')
+        ?.innerText
+        ?.trim();
+
+    const time =
+      match.querySelector('.MatchTime')
+        ?.innerText
+        ?.trim();
+
+    const date =
+      footerItems[0];
+
+    const refereeTeams =
+      footerItems.slice(1);
+
+    const description = [
+      `Field: ${field}`,
+      '',
+      `Refereeing Team(s): ${
+        refereeTeams.length
+          ? refereeTeams.join(', ')
+          : 'None'
+      }`,
+      '',
+      `Group: ${group}`
+    ].join('\n');
+
+    const start =
+      createDateTime(
+        date,
+        time
+      );
+
+    const end =
+      addMinutes(
+        start,
+        duration
+      );
+
+    lines.push(
+      'BEGIN:VEVENT',
+      `UID:tournify-${index}-${Date.now()}`,
+      `SUMMARY:${title}`,
+      `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
+      `LOCATION:${venue}`,
+      `DTSTART;TZID=${timezone}:${start}`,
+      `DTEND;TZID=${timezone}:${end}`,
+      'END:VEVENT'
+    );
+
+  });
+
+  lines.push('END:VCALENDAR');
+
+  downloadFile(
+    `${tournamentName} - ${teamName}.ics`,
+    lines.join('\r\n')
+  );
+
+})();
