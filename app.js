@@ -370,8 +370,6 @@ console.log(
   window.currentRefereeMatches =
     refereeMatches;
 
-console.log('rendering...');
-
   return teamMatches;
 
 };
