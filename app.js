@@ -138,16 +138,11 @@ window.getMatches = async (tournamentId) => {
     ...doc.data()
   }));
 
-  console.table(
-    matches.slice(0, 20).map(match => ({
-      day: match.day,
-      start: match.st,
-      field: match.field,
-      team1: match.team1,
-      team2: match.team2,
-      referee: match.referee
-    }))
-  );
+renderMatches(
+  team,
+  playingMatches,
+  refereeMatches
+);
 
   return matches;
 
@@ -358,7 +353,100 @@ console.log(
   return teamMatches;
 
 };
+window.renderMatches = (
+  team,
+  playingMatches,
+  refereeMatches
+) => {
 
+  const results =
+    document.getElementById(
+      'results'
+    );
+
+  let html = `
+    <h2>${team.name}</h2>
+
+    <p>
+      Playing:
+      ${playingMatches.length}
+    </p>
+
+    <p>
+      Refereeing:
+      ${refereeMatches.length}
+    </p>
+
+    <p>
+      Total:
+      ${
+        playingMatches.length +
+        refereeMatches.length
+      }
+    </p>
+  `;
+
+  html += `
+    <h3>Playing Games</h3>
+
+    <table border="1" cellpadding="6">
+      <tr>
+        <th>Time</th>
+        <th>Field</th>
+        <th>Team 1</th>
+        <th>Team 2</th>
+      </tr>
+  `;
+
+  playingMatches.forEach(match => {
+
+    html += `
+      <tr>
+        <td>${match.st}</td>
+        <td>${match.field}</td>
+        <td>${match.team1}</td>
+        <td>${match.team2}</td>
+      </tr>
+    `;
+
+  });
+
+  html += `
+    </table>
+  `;
+
+  html += `
+    <h3>Referee Games</h3>
+
+    <table border="1" cellpadding="6">
+      <tr>
+        <th>Time</th>
+        <th>Field</th>
+        <th>Team 1</th>
+        <th>Team 2</th>
+      </tr>
+  `;
+
+  refereeMatches.forEach(match => {
+
+    html += `
+      <tr>
+        <td>${match.st}</td>
+        <td>${match.field}</td>
+        <td>${match.team1}</td>
+        <td>${match.team2}</td>
+      </tr>
+    `;
+
+  });
+
+  html += `
+    </table>
+  `;
+
+  results.innerHTML = html;
+
+};
 
 
 loadTeams();
