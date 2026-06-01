@@ -764,9 +764,17 @@ if (eventIsOver) {
     team.division
   ] || team.division;
 
-    const country =
+  const flag =
   (team.country || '')
-    .toLowerCase();
+    .toUpperCase()
+    .replace(
+      /./g,
+      char =>
+        String.fromCodePoint(
+          127397 + char.charCodeAt()
+        )
+    );
+
 
 html += `
   <div class="team-card">
@@ -785,14 +793,28 @@ html += `
 
       </div>
 
-      <div class="team-country">
-        ${country.toUpperCase()}
+     <div class="team-country">
+      ${flag}
       </div>
 
     </div>
 
   </div>
-  
+
+  <div class="stats">
+
+    <div class="stat-card">
+
+      <div class="stat-value">
+        ${playingMatches.length}
+      </div>
+
+      <div class="stat-label">
+        Playing
+      </div>
+
+    </div>
+
     <div class="stat-card">
 
       <div class="stat-value">
@@ -822,6 +844,8 @@ html += `
 
   </div>
 `;
+
+  
 
   if (upcomingMatches.length > 0) {
 
