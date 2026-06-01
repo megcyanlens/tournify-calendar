@@ -104,7 +104,12 @@ return false;
 
     window.tournamentInfo =
       tournamentDoc.data();
-
+    
+    document.documentElement.style.setProperty(
+      '--tournament-color',
+      window.tournamentInfo.color || '#0b2d69'
+    );
+    
     window.tournamentFields =
       window.tournamentInfo.fields;
 
