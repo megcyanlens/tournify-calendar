@@ -1,15 +1,10 @@
 const TOURNAMENT_ID =
   '6IXXjNnmPXwgWw6GXNPS';
 
-const TOURNAMENT_NAME =
-  'Big Bowl XVIII';
-
-function getVenue() {
-
-  return `${window.tournamentInfo.place},
-${window.tournamentInfo.placeSecondaryName}`;
-
-}
+//function getVenue() {
+//  return `${window.tournamentInfo.place},
+//${window.tournamentInfo.placeSecondaryName}`;
+//}
 
 function getEventDurationMinutes() {
 
