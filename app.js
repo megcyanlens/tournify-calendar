@@ -44,28 +44,23 @@ if (!LIVE_LINK) {
     if (!snapshot.docs.length) {
 
         document.getElementById(
-          'pageTitle'
-        ).textContent =
-          'No Tournament Found';
-      
-        document.getElementById(
-          'teamSelect'
-        ).style.display =
-          'none';
-      
-        document.getElementById(
-          'generateBtn'
-        ).style.display =
-          'none';
-      
-        document.getElementById(
-          'results'
-        ).innerHTML =
-          '<p>No tournament found.</p>';
-      
-        return false;
-      
-      }
+            'pageTitle'
+          ).textContent =
+            'No Tournament Found';
+        
+          document.getElementById(
+            'controls'
+          ).style.display =
+            'none';
+        
+          document.getElementById(
+            'results'
+          ).innerHTML =
+            '<p>No tournament found.</p>';
+        
+          return false;
+        
+        }
 
     const tournamentDoc =
       snapshot.docs[0];
