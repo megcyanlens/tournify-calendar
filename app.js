@@ -434,7 +434,7 @@ document
       window.bigBowlTeams
         .filter(
           team =>
-            team.division ===
+            String(team.division) ===
             selectedDivision
         )
         .sort(
