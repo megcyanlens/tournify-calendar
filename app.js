@@ -217,6 +217,7 @@ window.getTeams = async (tournamentId) => {
 
 };
 window.tournamentFields = {};
+window.currentDivision = '';
 
 window.getMatches = async (tournamentId) => {
 
@@ -406,9 +407,61 @@ document
     'change',
     e => {
 
-      const selectedDivision =
-        e.target.value;
-
+        const selectedDivision =
+          e.target.value;
+        
+        if (
+          window.currentDivision !==
+          selectedDivision
+        ) {
+        
+          window.selectedTeam = null;
+          window.currentTeam = null;
+        
+          document.getElementById(
+            'results'
+          ).innerHTML = '';
+        
+          const generateButton =
+            document.getElementById(
+              'generateBtn'
+            );
+        
+          generateButton.disabled =
+            true;
+        
+          generateButton.textContent =
+            'Generate Calendar';
+        
+        }
+        
+        window.currentDivision =
+          selectedDivision;
+        
+        const teamSelect =
+            document.getElementById(
+              'teamSelect'
+            );
+          
+          // Clear currently selected team
+          window.selectedTeam = null;
+          window.currentTeam = null;
+          
+          // Clear rendered results
+          document.getElementById(
+            'results'
+          ).innerHTML = '';
+          
+          // Reset calendar button
+          document.getElementById(
+            'generateBtn'
+          ).disabled = true;
+          
+          document.getElementById(
+            'generateBtn'
+          ).textContent =
+            'Generate Calendar';
+      
       const teamSelect =
         document.getElementById(
           'teamSelect'
