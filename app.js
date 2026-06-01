@@ -26,11 +26,29 @@ window.loadTournamentFromLiveLink =
 
     if (!snapshot.docs.length) {
 
-      throw new Error(
-        `Tournament not found: ${LIVE_LINK}`
-      );
-
-    }
+        document.getElementById(
+          'pageTitle'
+        ).textContent =
+          'No Tournament Found';
+      
+        document.getElementById(
+          'teamSelect'
+        ).style.display =
+          'none';
+      
+        document.getElementById(
+          'generateBtn'
+        ).style.display =
+          'none';
+      
+        document.getElementById(
+          'results'
+        ).innerHTML =
+          '<p>No tournament found.</p>';
+      
+        return false;
+      
+      }
 
     const tournamentDoc =
       snapshot.docs[0];
@@ -49,6 +67,8 @@ window.loadTournamentFromLiveLink =
 ).textContent =
     window.tournamentInfo.name;
     
+    
+    return true;
   };
 
 //function getVenue() {
@@ -925,7 +945,12 @@ window.lastICS = ics;
 
 (async () => {
 
-  await loadTournamentFromLiveLink();
+  const found =
+    await loadTournamentFromLiveLink();
+
+  if (!found) {
+    return;
+  }
 
   await loadTeams();
 
