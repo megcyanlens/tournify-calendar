@@ -514,7 +514,14 @@ window.generateCalendar =
         a.st.localeCompare(b.st)
     );
 
-    console.log(calendarEvents);
+    console.table(
+        calendarEvents.map(event => ({
+          type: event.type,
+          day: event.day,
+          time: event.st,
+          field: event.field
+        }))
+      );
 
   };
     document
