@@ -299,11 +299,20 @@ window.getUpcomingTournaments =
             a.date - b.date
         );
 
+    
     console.log(
       'upcoming tournaments:',
       tournaments.length
     );
-
+console.table(
+  tournaments.map(t => ({
+    name: t.name,
+    liveLink: t.liveLink,
+    date: new Date(
+      t.date * 1000
+    ).toLocaleDateString()
+  }))
+);
     return tournaments;
 
   };
