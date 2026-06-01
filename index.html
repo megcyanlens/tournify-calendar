@@ -1,49 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Tournify Calendar Exporter
+  </title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  />
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
 </head>
+
 <body>
 
-<h1>
-  Tournify Calendar Exporter
-</h1>
+  <div class="app">
 
-<h2 id="pageTitle">
-  Loading tournament...
-</h2>
+    <header class="hero">
 
-<label for="divisionSelect">
-  Division
-</label>
+      <div class="hero__icon">
+        📅
+      </div>
 
-<select id="divisionSelect">
-  <option value="">
-    Select a division...
-  </option>
-</select>
+      <div>
 
-<label for="teamSelect">
-  Team
-</label>
+        <h1>
+          Tournify Calendar Exporter
+        </h1>
 
-<select
-  id="teamSelect"
-  disabled
->
-<option value="">
-  Select a division first...
-</option>
-</select>
+        <h2 id="pageTitle">
+          Loading tournament...
+        </h2>
 
-<button id="generateBtn">
-  Generate Calendar
-</button>
+      </div>
 
-<hr>
+    </header>
 
-<div id="results"></div>
+    <section class="toolbar">
 
-<script type="module" src="./app.js"></script>
+      <div class="field-group">
+
+        <label for="divisionSelect">
+          Division
+        </label>
+
+        <select id="divisionSelect">
+
+          <option value="">
+            All Divisions
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="field-group">
+
+        <label for="teamSelect">
+          Team
+        </label>
+
+        <select id="teamSelect">
+
+          <option value="">
+            Select a team...
+          </option>
+
+        </select>
+
+      </div>
+
+    </section>
+
+    <div id="results">
+
+      <div class="empty-state">
+
+        <div class="empty-state__icon">
+          👥
+        </div>
+
+        <h3>
+          No Team Selected
+        </h3>
+
+        <p>
+          Select a team from the dropdown above
+          to view their schedule and export a
+          calendar.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script
+    type="module"
+    src="./app.js"
+  ></script>
 
 </body>
+
 </html>
