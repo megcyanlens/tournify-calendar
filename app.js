@@ -84,33 +84,44 @@ window.renderTournamentPicker =
         'tournamentSearch'
       );
 
-    search.addEventListener(
-      'change',
-      () => {
+const search =
+  document.getElementById(
+    'tournamentSearch'
+  );
 
-        const selected =
-          tournaments.find(
-            t =>
-              `${t.name} (${new Date(
-                t.date * 1000
-              ).toLocaleDateString()})`
-              === search.value
-          );
+search.addEventListener(
+  'change',
+  () => {
 
-        if (!selected) {
-          return;
-        }
-      console.log(selected);
-        window.location.search =
-          '?tournament=' +
-          encodeURIComponent(
-            selected.liveLink
-          );
-
-      }
+    console.log(
+      'search value:',
+      search.value
     );
 
-  };
+    const selected =
+      tournaments.find(
+        t =>
+          t.name ===
+          search.value
+      );
+
+    console.log(
+      'selected:',
+      selected
+    );
+
+    if (!selected) {
+      return;
+    }
+
+    window.location.search =
+      '?tournament=' +
+      encodeURIComponent(
+        selected.liveLink
+      );
+
+  }
+);
 
 window.loadTournamentFromLiveLink =
   async () => {
