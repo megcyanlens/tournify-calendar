@@ -109,3 +109,27 @@ window.getTeams = async (tournamentId) => {
   );
 
 };
+
+window.getMatches = async (tournamentId) => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      tournamentId,
+      'matches'
+    )
+  );
+
+  console.log(
+    snapshot.docs.length
+  );
+
+  console.log(
+    snapshot.docs.slice(0, 5).map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+  );
+
+};
