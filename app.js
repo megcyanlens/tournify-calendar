@@ -1104,10 +1104,14 @@ window.lastICS = ics;
 //console.log(JSON.stringify(ics));
 
   
-  downloadICS(
-    ics,
-    `${window.selectedTeam.name}.ics`
-  );
+  const filename =
+  `${window.tournamentInfo.name} - ${window.selectedTeam.name}`
+    .replace(/[<>:"/\\|?*]/g, '');
+
+downloadICS(
+  ics,
+  `${filename}.ics`
+);
 
 };
 
