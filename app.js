@@ -67,17 +67,17 @@ window.testFirestore = async () => {
   const snapshot =
     await getDocs(collection(db, 'tournaments'));
 
-  console.log(
-    'count:',
-    snapshot.docs.length
-  );
+//  console.log(
+ //   'count:',
+ //   snapshot.docs.length
+//  );
 
-  console.log(
-    snapshot.docs.slice(0, 3).map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }))
-  );
+  //console.log(
+   // snapshot.docs.slice(0, 3).map(doc => ({
+   //   id: doc.id,
+    //  ...doc.data()
+  //  }))
+ // );
 
   return snapshot.docs.length;
 
@@ -95,13 +95,13 @@ window.testBigBowl = async () => {
       )
     );
 
-    console.log(
-      snapshot.exists()
-    );
+   // console.log(
+   //   snapshot.exists()
+   // );
 
-    console.log(
-      snapshot.data()
-    );
+ //   console.log(
+    //  snapshot.data()
+   // );
 
   } catch (e) {
 
@@ -121,12 +121,12 @@ window.getTeams = async (tournamentId) => {
     )
   );
 
-  console.log(
-    snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }))
-  );
+ // console.log(
+  //  snapshot.docs.map(doc => ({
+  //    id: doc.id,
+  //    ...doc.data()
+  //  }))
+  //);
 
 };
 window.tournamentFields = {};
@@ -255,10 +255,7 @@ window.loadTeams = async () => {
         'teamSelect'
       );
 
-    console.log(
-      'select:',
-      select
-    );
+   // console.log('select:', select );
 
     select.innerHTML = '';
 
@@ -288,11 +285,11 @@ select.appendChild(
 
     });
 
-    console.log(
-      'loaded',
-      teams.length,
-      'teams'
-    );
+  //  console.log(
+   //   'loaded',
+   //   teams.length,
+   //   'teams'
+  //  );
 
     window.bigBowlTeams = teams;
 
@@ -357,21 +354,13 @@ const teamMatches = [
   ...refereeMatches
 ];
 
-  console.log('team', team.name);
+  //console.log('team', team.name);
 
   window.selectedTeam = team;
   
-  console.log('playing',playingMatches.length);
-
-console.log(
-  'refereeing',
-  refereeMatches.length
-);
-
-console.log(
-  'total',
-  teamMatches.length
-);
+// console.log('playing',playingMatches.length);
+//console.log('refereeing',refereeMatches.length);
+//console.log('total',teamMatches.length);
 
   renderMatches(
   team,
@@ -720,9 +709,9 @@ END:VEVENT
 
 ics += `END:VCALENDAR`;
   
-console.log(ics);
+//console.log(ics);
 window.lastICS = ics;
-console.log(JSON.stringify(ics));
+//console.log(JSON.stringify(ics));
 
   
   downloadICS(
@@ -731,8 +720,6 @@ console.log(JSON.stringify(ics));
   );
 
 };
-
-
 
 
     document
