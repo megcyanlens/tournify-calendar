@@ -143,7 +143,7 @@ renderMatches(
   playingMatches,
   refereeMatches
 );
-
+console.log('rendering...');
   return matches;
 
 };
