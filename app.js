@@ -307,6 +307,7 @@ window.getMatchesForTeam = async (team) => {
     id: doc.id,
     ...doc.data()
   }));
+    window.allMatches = matches;
 
   const teamMatches = matches.filter(match =>
     match.team1 === team.numInPoule0 ||
