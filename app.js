@@ -1,3 +1,15 @@
+const TOURNAMENT_ID =
+  '6IXXjNnmPXwgWw6GXNPS';
+
+const TOURNAMENT_NAME =
+  'Big Bowl XVIII';
+
+const VENUE =
+  'Turngesellschaft Walldorf 1896 e.V., Okrifteler Straße, Mörfelden-Walldorf, Deutschland';
+
+const MATCH_DURATION =
+  30;
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 
 import {
@@ -192,3 +204,97 @@ window.findLondonFireMatches = async () => {
   return fireMatches;
 
 };
+
+window.loadTeams = async () => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      TOURNAMENT_ID,
+      'teams'
+    )
+  );
+
+  const teams =
+    snapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      .sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+  const select =
+    document.getElementById(
+      'teamSelect'
+    );
+
+  select.innerHTML = '';
+
+  teams.forEach(team => {
+
+    const option =
+      document.createElement('option');
+
+    option.value =
+      team.id;
+
+    option.textContent =
+      team.name;
+
+    select.appendChild(option);
+
+  });
+
+  window.bigBowlTeams =
+    teams;
+
+};
+document
+  .getElementById('teamSelect')
+  .addEventListener(
+    'change',
+    async e => {
+
+      const team =
+        window.bigBowlTeams.find(
+          t => t.id === e.target.value
+        );
+
+     await window.getMatchesForTeam(team);
+
+    }
+  );
+window.getMatchesForTeam =
+  async team => {
+
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          'tournaments',
+          TOURNAMENT_ID,
+          'matches'
+        )
+      );
+
+    const matches =
+      snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+    console.log(
+      'selected team',
+      team
+    );
+
+    console.log(
+      'all matches',
+      matches
+    );
+
+  };
+loadTeams();
