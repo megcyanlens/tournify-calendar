@@ -1,85 +1,300 @@
+const TOURNAMENT_ID =
+  '6IXXjNnmPXwgWw6GXNPS';
+
+const TOURNAMENT_NAME =
+  'Big Bowl XVIII';
+
+const VENUE =
+  'Turngesellschaft Walldorf 1896 e.V., Okrifteler Straße, Mörfelden-Walldorf, Deutschland';
+
+const MATCH_DURATION =
+  30;
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 
 import {
-getFirestore,
-collection,
-getDocs
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  query,
+  where
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-const TOURNAMENT_ID =
-'6IXXjNnmPXwgWw6GXNPS';
-
 const firebaseConfig = {
-apiKey: "AIzaSyDpqIP2y0ZBWjAcknp1szptkyh0fk6zGQI",
-authDomain: "tournamentsoftware-a1b3d.firebaseapp.com",
-projectId: "tournamentsoftware-a1b3d",
-storageBucket: "tournamentsoftware-a1b3d.appspot.com",
-messagingSenderId: "659831913509",
-appId: "1:659831913509:web:1295743f7e5becfcaf13cc"
+  apiKey: "AIzaSyDpqIP2y0ZBWjAcknp1szptkyh0fk6zGQI",
+  authDomain: "tournamentsoftware-a1b3d.firebaseapp.com",
+  projectId: "tournamentsoftware-a1b3d",
+  storageBucket: "tournamentsoftware-a1b3d.appspot.com",
+  messagingSenderId: "659831913509",
+  appId: "1:659831913509:web:1295743f7e5becfcaf13cc"
 };
 
-const app =
-initializeApp(firebaseConfig);
+window.findTournament = async (liveLink) => {
 
-const db =
-getFirestore(app);
+  const q = query(
+    collection(db, 'tournaments'),
+    where('liveLink', '==', liveLink)
+  );
+
+  const snapshot = await getDocs(q);
+
+  console.log(
+    snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+  );
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.testFirestore = async () => {
+
+  const snapshot =
+    await getDocs(collection(db, 'tournaments'));
+
+  console.log(
+    'count:',
+    snapshot.docs.length
+  );
+
+  console.log(
+    snapshot.docs.slice(0, 3).map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+  );
+
+  return snapshot.docs.length;
+
+};
+
+window.testBigBowl = async () => {
+
+  try {
+
+    const snapshot = await getDoc(
+      doc(
+        db,
+        'tournaments',
+        '6IXXjNnmPXwgWw6GXNPS'
+      )
+    );
+
+    console.log(
+      snapshot.exists()
+    );
+
+    console.log(
+      snapshot.data()
+    );
+
+  } catch (e) {
+
+    console.error(e);
+
+  }
+
+};
+
+window.getTeams = async (tournamentId) => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      tournamentId,
+      'teams'
+    )
+  );
+
+  console.log(
+    snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+  );
+
+};
+
+window.getMatches = async (tournamentId) => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      tournamentId,
+      'matches'
+    )
+  );
+
+  const matches = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+
+  console.table(
+    matches.slice(0, 20).map(match => ({
+      day: match.day,
+      start: match.st,
+      field: match.field,
+      team1: match.team1,
+      team2: match.team2,
+      referee: match.referee
+    }))
+  );
+
+  return matches;
+
+};
+
+window.findTeam = async (tournamentId, teamName) => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      tournamentId,
+      'teams'
+    )
+  );
+
+  const teams = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+
+  return teams.find(
+    t => t.name === teamName
+  );
+
+};
+
+window.findLondonFireMatches = async () => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      '6IXXjNnmPXwgWw6GXNPS',
+      'matches'
+    )
+  );
+
+  const matches =
+    snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+  const fireMatches =
+    matches.filter(match =>
+      match.team1 === 2 ||
+      match.team2 === 2 ||
+      match.referee === 'yoDaAzO0m8ZU0TF1565J'
+    );
+
+  console.table(fireMatches);
+
+  return fireMatches;
+
+};
 
 window.loadTeams = async () => {
 
-const snapshot = await getDocs(
-collection(
-db,
-'tournaments',
-TOURNAMENT_ID,
-'teams'
-)
-);
+  try {
 
-const teams =
-snapshot.docs
-.map(doc => ({
-id: doc.id,
-...doc.data()
-}))
-.sort((a, b) =>
-a.name.localeCompare(b.name)
-);
+    console.log('loading teams');
 
-window.bigBowlTeams =
-teams;
+    const snapshot = await getDocs(
+      collection(
+        db,
+        'tournaments',
+        TOURNAMENT_ID,
+        'teams'
+      )
+    );
 
-const select =
-document.getElementById(
-'teamSelect'
-);
+    console.log(
+      'team docs:',
+      snapshot.docs.length
+    );
 
-select.innerHTML = '';
+    const teams =
+      snapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
 
-teams.forEach(team => {
+    const select =
+      document.getElementById(
+        'teamSelect'
+      );
 
-```
-const option =
-  document.createElement('option');
+    console.log(
+      'select:',
+      select
+    );
 
-option.value =
-  team.id;
+    select.innerHTML = '';
 
-option.textContent =
-  team.name;
+    teams.forEach(team => {
 
-select.appendChild(option);
-```
+      const option =
+        document.createElement('option');
 
-});
+      option.value = team.id;
+      option.textContent = team.name;
+
+      select.appendChild(option);
+
+    });
+
+    console.log(
+      'loaded',
+      teams.length,
+      'teams'
+    );
+
+    window.bigBowlTeams = teams;
+
+  } catch (error) {
+
+    console.error(
+      'loadTeams failed',
+      error
+    );
+
+  }
 
 };
+document
+  .getElementById('teamSelect')
+  .addEventListener(
+    'change',
+    async e => {
 
-window.getMatchesForTeam =
-async team => {
+      const team =
+        window.bigBowlTeams.find(
+          t => t.id === e.target.value
+        );
 
-```
-const snapshot =
-  await getDocs(
+     await window.getMatchesForTeam(team);
+
+    }
+  );
+window.getMatchesForTeam = async (team) => {
+
+  const snapshot = await getDocs(
     collection(
       db,
       'tournaments',
@@ -88,119 +303,38 @@ const snapshot =
     )
   );
 
-const matches =
-  snapshot.docs.map(doc => ({
+  const matches = snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   }));
+    window.allMatches = matches;
 
-window.allMatches =
-  matches;
-
-const playingMatches =
-  matches.filter(
-    m =>
-      m.poule === team.poule0 &&
-      (
-        m.team1 === team.numInPoule0 ||
-        m.team2 === team.numInPoule0
-      )
+  const teamMatches = matches.filter(match =>
+    match.team1 === team.numInPoule0 ||
+    match.team2 === team.numInPoule0 ||
+    match.referee === team.id
   );
 
-const refereeMatches =
-  matches.filter(
-    m => m.referee === team.id
+  console.log('team', team.name);
+  console.log('matches', teamMatches.length);
+
+  console.table(
+    teamMatches.map(match => ({
+      day: match.day,
+      start: match.st,
+      team1: match.team1,
+      team2: match.team2,
+      referee: match.referee,
+      field: match.field
+    }))
   );
 
-const teamLookup = {};
-
-window.bigBowlTeams.forEach(t => {
-
-  teamLookup[
-    `${t.poule0}-${t.numInPoule0}`
-  ] = t.name;
-
-});
-
-const playingEvents =
-  playingMatches.map(match => ({
-
-    type: 'PLAYING',
-
-    time: match.st,
-
-    team1:
-      teamLookup[
-        `${match.poule}-${match.team1}`
-      ],
-
-    team2:
-      teamLookup[
-        `${match.poule}-${match.team2}`
-      ],
-
-    field: match.field
-
-  }));
-
-const refereeEvents =
-  refereeMatches.map(match => ({
-
-    type: 'REFEREE',
-
-    time: match.st,
-
-    team1:
-      teamLookup[
-        `${match.poule}-${match.team1}`
-      ],
-
-    team2:
-      teamLookup[
-        `${match.poule}-${match.team2}`
-      ],
-
-    field: match.field
-
-  }));
-
-console.log(
-  'Playing:',
-  playingEvents.length
-);
-
-console.log(
-  'Refereeing:',
-  refereeEvents.length
-);
-
-console.table([
-  ...playingEvents,
-  ...refereeEvents
-]);
-```
+  return teamMatches;
 
 };
 
-document
-.getElementById('teamSelect')
-.addEventListener(
-'change',
-async e => {
 
-```
-  const team =
-    window.bigBowlTeams.find(
-      t => t.id === e.target.value
-    );
-
-  await window.getMatchesForTeam(
-    team
-  );
-
-}
-```
-
-);
 
 loadTeams();
+
+console.log('app loaded');
