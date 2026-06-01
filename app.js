@@ -339,16 +339,13 @@ console.log(
   teamMatches.length
 );
 
-  console.table(
-    teamMatches.map(match => ({
-      day: match.day,
-      start: match.st,
-      team1: match.team1,
-      team2: match.team2,
-      referee: match.referee,
-      field: match.field
-    }))
-  );
+  renderMatches(
+  team,
+  playingMatches,
+  refereeMatches
+);
+
+console.log('rendering...');
 
   return teamMatches;
 
