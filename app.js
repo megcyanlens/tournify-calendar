@@ -354,8 +354,9 @@ const divisions =
   )];
 
 divisionSelect.innerHTML =
-  '<option value="">Select a division...</option>';
+  '<option value="">All Divisions</option>';
 
+    
 window.divisionNames = {
   "0": "MEN / MIX",
   "1683639950": "WOMEN"
@@ -391,6 +392,10 @@ divisions.forEach(
 
   }
 
+divisionSelect.dispatchEvent(
+  new Event('change')
+);
+  
 };
 
 document
@@ -409,8 +414,7 @@ document
           'teamSelect'
         );
 
-      teamSelect.disabled =
-        !selectedDivision;
+      teamSelect.disabled = false;
 
       teamSelect.innerHTML = '';
 
@@ -433,12 +437,13 @@ document
         placeholder
       );
 
-      window.bigBowlTeams
-        .filter(
-          team =>
-            String(team.division) ===
-            selectedDivision
-        )
+    window.bigBowlTeams
+  .filter(
+    team =>
+      !selectedDivision ||
+      String(team.division) === selectedDivision
+  )
+      
         .sort(
           (a, b) =>
             a.name.localeCompare(
