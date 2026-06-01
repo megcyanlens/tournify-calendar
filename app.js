@@ -338,26 +338,48 @@ select.appendChild(
   placeholder
 );
 
-    teams.forEach(team => {
-
-      const option =
-        document.createElement('option');
-
-      option.value = team.id;
-      option.textContent = team.name;
-
-      select.appendChild(option);
-
-    });
-
-  //  console.log(
-   //   'loaded',
-   //   teams.length,
-   //   'teams'
-  //  );
-
     window.bigBowlTeams = teams;
-
+    const divisionSelect =
+        document.getElementById(
+          'divisionSelect'
+        );
+      
+      const divisions =
+        [...new Set(
+          teams.map(
+            team => team.division
+          )
+        )];
+      
+      divisions.sort();
+      
+      divisionSelect.innerHTML =
+        '<option value="">Select a division...</option>';
+      
+      divisions.forEach(
+        division => {
+      
+          const option =
+            document.createElement(
+              'option'
+            );
+      
+          option.value =
+            division;
+      
+          option.textContent =
+            division === '0'
+              ? 'MEN / MIX'
+              : division === '1'
+              ? 'WOMEN'
+              : division;
+      
+          divisionSelect.appendChild(
+            option
+          );
+      
+        }
+      );
   } catch (error) {
 
     console.error(
@@ -368,6 +390,81 @@ select.appendChild(
   }
 
 };
+
+document
+  .getElementById(
+    'divisionSelect'
+  )
+  .addEventListener(
+    'change',
+    e => {
+
+      const selectedDivision =
+        e.target.value;
+
+      const teamSelect =
+        document.getElementById(
+          'teamSelect'
+        );
+
+      teamSelect.disabled =
+        !selectedDivision;
+
+      teamSelect.innerHTML = '';
+
+      const placeholder =
+        document.createElement(
+          'option'
+        );
+
+      placeholder.value = '';
+      placeholder.textContent =
+        'Select a team...';
+
+      placeholder.selected =
+        true;
+
+      placeholder.disabled =
+        true;
+
+      teamSelect.appendChild(
+        placeholder
+      );
+
+      window.bigBowlTeams
+        .filter(
+          team =>
+            team.division ===
+            selectedDivision
+        )
+        .sort(
+          (a, b) =>
+            a.name.localeCompare(
+              b.name
+            )
+        )
+        .forEach(team => {
+
+          const option =
+            document.createElement(
+              'option'
+            );
+
+          option.value =
+            team.id;
+
+          option.textContent =
+            team.name;
+
+          teamSelect.appendChild(
+            option
+          );
+
+        });
+
+    }
+  );
+
 document
   .getElementById('teamSelect')
   .addEventListener(
