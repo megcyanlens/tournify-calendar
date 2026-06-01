@@ -257,9 +257,9 @@ const now =
     Date.now() / 1000
   );
 
-const thirtyDays =
+const fourteenDays =
   now +
-  (30 * 24 * 60 * 60);
+  (14 * 24 * 60 * 60);
 
 const q = query(
   collection(
@@ -274,7 +274,7 @@ const q = query(
   where(
     'date',
     '<=',
-    thirtyDays
+    fourteenDays
   ),
   limit(2000)
 );
@@ -291,7 +291,7 @@ const q = query(
     t =>
       t.liveLink &&
       t.date >= now &&
-      t.date <= thirtyDays
+      t.date <= fourteenDays
   )
   .sort(
     (a, b) =>
