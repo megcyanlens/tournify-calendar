@@ -100,7 +100,7 @@ window.renderTournamentPicker =
         if (!selected) {
           return;
         }
-
+      console.log(selected);
         window.location.search =
           '?tournament=' +
           encodeURIComponent(
