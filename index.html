@@ -1,26 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Tournify Calendar Exporter</title>
+
+  <style>
+    body{
+      font-family:Arial,sans-serif;
+      max-width:800px;
+      margin:40px auto;
+      padding:20px;
+    }
+
+    input{
+      width:100%;
+      padding:10px;
+      margin-bottom:15px;
+      box-sizing:border-box;
+    }
+
+    button{
+      padding:12px 20px;
+      cursor:pointer;
+    }
+
+    #status{
+      margin-top:20px;
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Tournify Calendar Exporter</h1>
+<h1>Tournify Calendar Exporter</h1>
 
-  <p>Paste a Tournify Team URL:</p>
+<label>Tournify Team URL</label>
+<input id="teamUrl">
 
-  <input
-    id="teamUrl"
-    type="text"
-    style="width:600px"
-    placeholder="https://tournifyapp.com/live/..."
-  >
+<label>Venue</label>
+<input id="venue">
 
-  <button id="generate">
-    Generate Calendar
-  </button>
+<label>Match Duration (minutes)</label>
+<input id="duration" value="30">
 
-  <script src="app.js"></script>
+<button id="generateBtn">
+  Generate Calendar
+</button>
+
+<div id="status"></div>
+
+<script type="module" src="./app.js"></script>
 
 </body>
 </html>
