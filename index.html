@@ -1,54 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Tournify Calendar Exporter</title>
+<h1>Big Bowl XVIII Calendar Exporter</h1>
 
-  <style>
-    body{
-      font-family:Arial,sans-serif;
-      max-width:800px;
-      margin:40px auto;
-      padding:20px;
-    }
-
-    input{
-      width:100%;
-      padding:10px;
-      margin-bottom:15px;
-      box-sizing:border-box;
-    }
-
-    button{
-      padding:12px 20px;
-      cursor:pointer;
-    }
-
-    #status{
-      margin-top:20px;
-    }
-  </style>
-</head>
-<body>
-
-<h1>Tournify Calendar Exporter</h1>
-
-<label>Tournify Team URL</label>
-<input id="teamUrl">
-
-<label>Venue</label>
-<input id="venue">
-
-<label>Match Duration (minutes)</label>
-<input id="duration" value="30">
+<label>Select Team</label>
+<select id="teamSelect">
+  <option>Loading teams...</option>
+</select>
 
 <button id="generateBtn">
   Generate Calendar
 </button>
-
-<div id="status"></div>
-
-<script type="module" src="./app.js"></script>
-
-</body>
-</html>
