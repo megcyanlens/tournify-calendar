@@ -9,26 +9,26 @@ const LIVE_LINK =
 window.renderTournamentPicker =
   async () => {
 
-        document.getElementById(
-          'results'
-        ).innerHTML = `
-          <div class="empty-state">
-        
-            <div class="spinner"></div>
-        
-            <h3>
-              Loading Tournaments...
-            </h3>
-        
-          </div>
-        `;
-  const tournaments =
+    document.getElementById(
+      'results'
+    ).innerHTML = `
+      <div class="empty-state">
+
+        <div class="spinner"></div>
+
+        <h3>
+          Loading Tournaments...
+        </h3>
+
+      </div>
+    `;
+
+    const tournaments =
       await getUpcomingTournaments();
 
     document.getElementById(
       'results'
     ).innerHTML = `
-    
       <div class="empty-state">
 
         <div class="empty-state__icon">
@@ -56,9 +56,6 @@ window.renderTournamentPicker =
       </div>
     `;
 
-    const tournaments =
-      await getUpcomingTournaments();
-
     const list =
       document.getElementById(
         'tournamentList'
@@ -72,46 +69,48 @@ window.renderTournamentPicker =
         );
 
       option.value =
-  `${t.name} (${new Date(
-    t.date * 1000
-  ).toLocaleDateString()})`;
+        `${t.name} (${new Date(
+          t.date * 1000
+        ).toLocaleDateString()})`;
 
       list.appendChild(
         option
       );
 
     });
-const search =
-  document.getElementById(
-    'tournamentSearch'
-  );
 
-search.addEventListener(
-  'change',
-  () => {
-
-   const selected =
-  tournaments.find(
-    t =>
-      `${t.name} (${new Date(
-        t.date * 1000
-      ).toLocaleDateString()})`
-      === search.value
-  );
-
-    if (!selected) {
-      return;
-    }
-
-    window.location.search =
-      '?tournament=' +
-      encodeURIComponent(
-        selected.liveLink
+    const search =
+      document.getElementById(
+        'tournamentSearch'
       );
 
-  }
-);
-};
+    search.addEventListener(
+      'change',
+      () => {
+
+        const selected =
+          tournaments.find(
+            t =>
+              `${t.name} (${new Date(
+                t.date * 1000
+              ).toLocaleDateString()})`
+              === search.value
+          );
+
+        if (!selected) {
+          return;
+        }
+
+        window.location.search =
+          '?tournament=' +
+          encodeURIComponent(
+            selected.liveLink
+          );
+
+      }
+    );
+
+  };
 
 window.loadTournamentFromLiveLink =
   async () => {
@@ -245,23 +244,32 @@ window.testFirestore = async () => {
 window.getUpcomingTournaments =
   async () => {
 
-    const now =
-      Math.floor(
-        Date.now() / 1000
-      );
+const now =
+  Math.floor(
+    Date.now() / 1000
+  );
 
-    const q = query(
-      collection(
-        db,
-        'tournaments'
-      ),
-      where(
-        'date',
-        '>=',
-        now
-      ),
-      limit(100)
-    );
+const thirtyDays =
+  now +
+  (30 * 24 * 60 * 60);
+
+const q = query(
+  collection(
+    db,
+    'tournaments'
+  ),
+  where(
+    'date',
+    '>=',
+    now
+  ),
+  where(
+    'date',
+    '<=',
+    thirtyDays
+  ),
+  limit(100)
+);
 
     const snapshot =
       await getDocs(q);
