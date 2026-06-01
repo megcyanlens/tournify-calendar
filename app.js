@@ -1,5 +1,55 @@
-const TOURNAMENT_ID =
-  '6IXXjNnmPXwgWw6GXNPS';
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const LIVE_LINK =
+  params.get('tournament');
+
+window.loadTournamentFromLiveLink =
+  async () => {
+
+    const q = query(
+      collection(
+        db,
+        'tournaments'
+      ),
+      where(
+        'liveLink',
+        '==',
+        LIVE_LINK
+      )
+    );
+
+    const snapshot =
+      await getDocs(q);
+
+    if (!snapshot.docs.length) {
+
+      throw new Error(
+        `Tournament not found: ${LIVE_LINK}`
+      );
+
+    }
+
+    const tournamentDoc =
+      snapshot.docs[0];
+
+    window.tournamentId =
+      tournamentDoc.id;
+
+    window.tournamentInfo =
+      tournamentDoc.data();
+
+    window.tournamentFields =
+      window.tournamentInfo.fields;
+
+    document.getElementById(
+      'pageTitle'
+    ).textContent =
+      `${window.tournamentInfo.name} Calendar Exporter`;
+
+  };
 
 //function getVenue() {
 //  return `${window.tournamentInfo.place},
@@ -132,7 +182,7 @@ window.loadTournamentInfo = async () => {
     doc(
       db,
       'tournaments',
-      TOURNAMENT_ID
+      window.tournamentId
     )
   );
 
@@ -142,9 +192,15 @@ window.loadTournamentInfo = async () => {
   window.tournamentInfo =
     tournament;
 
+  
+document.getElementById(
+  'pageTitle'
+).textContent =
+  `${tournament.name} Calendar Exporter`;
+
+  
   window.tournamentFields =
     tournament.fields;
-
 //  console.log('fields loaded',tournament.fields );
 
 };
@@ -228,7 +284,7 @@ window.loadTeams = async () => {
       collection(
         db,
         'tournaments',
-        TOURNAMENT_ID,
+        window.tournamentId,
         'teams'
       )
     );
@@ -319,7 +375,7 @@ window.getMatchesForTeam = async (team) => {
     collection(
       db,
       'tournaments',
-      TOURNAMENT_ID,
+      window.tournamentId,
       'matches'
     )
   );
@@ -726,7 +782,8 @@ window.lastICS = ics;
 
 (async () => {
 
-  await loadTournamentInfo();
+  await loadTournamentFromLiveLink();
+
   await loadTeams();
 
 })();
