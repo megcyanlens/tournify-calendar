@@ -89,3 +89,23 @@ window.testBigBowl = async () => {
   }
 
 };
+
+window.getTeams = async (tournamentId) => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      tournamentId,
+      'teams'
+    )
+  );
+
+  console.log(
+    snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+  );
+
+};
