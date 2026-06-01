@@ -698,7 +698,7 @@ DTSTART:${startUtc}
 DTEND:${endUtc}
 SUMMARY:${title}
 DESCRIPTION:${title}
-LOCATION:${fieldName}, ${getVenue()}
+LOCATION:${fieldName}, ${window.tournamentInfo.place}, ${window.tournamentInfo.placeSecondaryName}
 END:VEVENT
 `;
 
@@ -707,6 +707,9 @@ END:VEVENT
 ics += `END:VCALENDAR`;
   
 console.log(ics);
+window.lastICS = ics;
+console.log(JSON.stringify(ics));
+
   
   downloadICS(
     ics,
