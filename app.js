@@ -1,8 +1,8 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {
   getFirestore,
-  collection,
-  getDocs
+  doc,
+  getDoc
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -35,5 +35,33 @@ window.testFirestore = async () => {
   );
 
   return snapshot.docs.length;
+
+};
+
+window.testBigBowl = async () => {
+
+  try {
+
+    const snapshot = await getDoc(
+      doc(
+        db,
+        'tournaments',
+        '6IXXjNnmPXwgWw6GXNPS'
+      )
+    );
+
+    console.log(
+      snapshot.exists()
+    );
+
+    console.log(
+      snapshot.data()
+    );
+
+  } catch (e) {
+
+    console.error(e);
+
+  }
 
 };
