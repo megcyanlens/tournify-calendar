@@ -622,7 +622,15 @@ window.renderMatches = (
   playingMatches,
   refereeMatches
 ) => {
+html += `
+  <div class="calendar-action">
 
+    <button id="generateBtn">
+      ${generateButton.textContent}
+    </button>
+
+  </div>
+`;
   const results =
     document.getElementById(
       'results'
@@ -964,6 +972,22 @@ upcomingRefereeMatches.forEach(match => {
 
   }
     results.innerHTML = html;
+  const button =
+  document.getElementById(
+    'generateBtn'
+  );
+
+if (button) {
+
+  button.disabled =
+    generateButton.disabled;
+
+  button.addEventListener(
+    'click',
+    generateCalendar
+  );
+
+}
 };
 
 function buildDateTime(
