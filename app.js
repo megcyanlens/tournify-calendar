@@ -461,11 +461,7 @@ document
             'generateBtn'
           ).textContent =
             'Generate Calendar';
-      
-      const teamSelect =
-        document.getElementById(
-          'teamSelect'
-        );
+    
 
       teamSelect.disabled = false;
 
