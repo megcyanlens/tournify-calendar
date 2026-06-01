@@ -472,6 +472,27 @@ const playedMatches =
       match.st
     ) <= now
   );
+const generateButton =
+  document.getElementById(
+    'generateBtn'
+  );
+
+generateButton.disabled =
+  upcomingMatches.length === 0;
+
+  if (
+  upcomingMatches.length === 0
+) {
+
+  generateButton.textContent =
+    'No Upcoming Games';
+
+} else {
+
+  generateButton.textContent =
+    'Generate Calendar';
+
+}
   
   let html = `
     <h2>${team.name}</h2>
