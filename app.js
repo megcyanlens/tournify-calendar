@@ -53,10 +53,25 @@ if (!LIVE_LINK) {
           ).style.display =
             'none';
         
-          document.getElementById(
-            'results'
-          ).innerHTML =
-            '<p>No tournament found.</p>';
+         document.getElementById(
+                'results'
+              ).innerHTML = `
+                <div class="empty-state">
+              
+                  <div class="empty-state__icon">
+                    🏆
+                  </div>
+              
+                  <h3>
+                    No Tournament Found
+                  </h3>
+              
+                  <p>
+                    Check the tournament URL and try again.
+                  </p>
+              
+                </div>
+              `;
         
           return false;
         
