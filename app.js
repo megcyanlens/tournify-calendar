@@ -62,13 +62,45 @@ window.renderTournamentPicker =
       );
 
     });
+const search =
+  document.getElementById(
+    'tournamentSearch'
+  );
 
+search.addEventListener(
+  'change',
+  () => {
+
+    const selected =
+      tournaments.find(
+        t =>
+          t.name ===
+          search.value
+      );
+
+    if (!selected) {
+      return;
+    }
+
+    window.location.search =
+      '?tournament=' +
+      encodeURIComponent(
+        selected.liveLink
+      );
+
+  }
+);
 };
 
 window.loadTournamentFromLiveLink =
   async () => {
 
 if (!LIVE_LINK) {
+  document.getElementById(
+  'controls'
+).style.display =
+  'none';
+
 await renderTournamentPicker();
 return false;
 }
@@ -90,6 +122,11 @@ return false;
       await getDocs(q);
 
     if (!snapshot.docs.length) {
+      document.getElementById(
+          'controls'
+        ).style.display =
+          'none';
+
     await renderTournamentPicker();
     return false;
         }
@@ -116,14 +153,12 @@ return false;
 ).textContent =
     window.tournamentInfo.name;
     
-    
+    document.getElementById(
+  'controls'
+      ).style.display =
+        'block';
     return true;
   };
-
-//function getVenue() {
-//  return `${window.tournamentInfo.place},
-//${window.tournamentInfo.placeSecondaryName}`;
-//}
 
 function getEventDurationMinutes() {
 
@@ -196,7 +231,40 @@ window.testFirestore = async () => {
   return snapshot.docs.length;
 
 };
+window.getUpcomingTournaments =
+  async () => {
 
+    const now =
+      Math.floor(
+        Date.now() / 1000
+      );
+
+    const q = query(
+      collection(
+        db,
+        'tournaments'
+      ),
+      where(
+        'date',
+        '>=',
+        now
+      )
+    );
+
+    const snapshot =
+      await getDocs(q);
+
+    return snapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      .sort(
+        (a, b) =>
+          a.date - b.date
+      );
+
+  };
 window.testBigBowl = async () => {
 
   try {
