@@ -723,9 +723,15 @@ if (eventIsOver) {
   `;
 
 }
-  
-  html += `
-    <h2>${team.name}</h2>
+  const divisionName =
+  window.divisionNames?.[
+    team.division
+  ] || team.division;
+
+      html += `
+        <h2>
+          ${team.name} - ${divisionName}
+        </h2>
 
     <p>
       Playing:
