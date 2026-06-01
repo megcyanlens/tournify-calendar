@@ -55,15 +55,6 @@ window.findTournament = async (liveLink) => {
 
 };
 
-const eventDuration =
-  getEventDurationMinutes();
-
-const startDateTime = ...;
-const endDateTime =
-  new Date(
-    startDateTime.getTime() +
-    eventDuration * 60000
-  );
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -229,14 +220,6 @@ window.findLondonFireMatches = async () => {
 
 };
 
-document
-  .getElementById('generateBtn')
-  .addEventListener(
-    'click',
-    generateCalendar
-  );
-
-
 window.loadTeams = async () => {
 
   try {
@@ -395,57 +378,6 @@ window.renderMatches = (
   playingMatches,
   refereeMatches
 ) => {
-window.generateCalendar = () => {
-
-  const team =
-    window.selectedTeam;
-
-  if (!team) {
-
-    alert(
-      'Please select a team first'
-    );
-
-    return;
-
-  }
-
-  const eventDuration =
-    Number(
-      window.tournamentInfo.matchDuration
-    ) +
-    Number(
-      window.tournamentInfo.timeBetweenMatches
-    );
-
-  const calendarEvents =
-    window.calendarEvents.map(
-      event => {
-
-        const start =
-          buildDateTime(
-            event.day,
-            event.time
-          );
-
-        const end =
-          new Date(
-            start.getTime() +
-            eventDuration * 60000
-          );
-
-        return {
-          ...event,
-          start,
-          end
-        };
-
-      }
-    );
-
-  console.log(
-    calendarEvents
-  );
 
 };
   const results =
@@ -649,9 +581,24 @@ window.generateCalendar =
   calendarEvents;
     
     calendarEvents.sort(
-      (a, b) =>
-        a.st.localeCompare(b.st)
-    );
+        (a, b) => {
+      
+          const aDate =
+            buildDateTime(
+              a.day,
+              a.st
+            );
+      
+          const bDate =
+            buildDateTime(
+              b.day,
+              b.st
+            );
+      
+          return aDate - bDate;
+      
+        }
+      );
 
    console.table(
         calendarEvents.map(event => ({
@@ -672,10 +619,6 @@ window.generateCalendar =
     'click',
     generateCalendar
   );
-
-
-await loadTournamentInfo();
-await loadTeams();
 
 (async () => {
 
