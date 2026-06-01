@@ -137,13 +137,7 @@ window.getMatches = async (tournamentId) => {
     id: doc.id,
     ...doc.data()
   }));
-
-renderMatches(
-  team,
-  playingMatches,
-  refereeMatches
-);
-console.log('rendering...');
+  
   return matches;
 
 };
@@ -343,6 +337,14 @@ console.log(
   refereeMatches
 );
 
+  window.currentTeam = team;
+
+  window.currentPlayingMatches =
+    playingMatches;
+
+  window.currentRefereeMatches =
+    refereeMatches;
+
 console.log('rendering...');
 
   return teamMatches;
@@ -485,6 +487,42 @@ window.renderMatches = (
   results.innerHTML = html;
 
 };
+
+window.generateCalendar =
+  async () => {
+
+    const calendarEvents = [
+
+      ...window.currentPlayingMatches.map(
+        match => ({
+          type: 'PLAYING',
+          ...match
+        })
+      ),
+
+      ...window.currentRefereeMatches.map(
+        match => ({
+          type: 'REFEREE',
+          ...match
+        })
+      )
+
+    ];
+
+    calendarEvents.sort(
+      (a, b) =>
+        a.st.localeCompare(b.st)
+    );
+
+    console.log(calendarEvents);
+
+  };
+    document
+  .getElementById('generateBtn')
+  .addEventListener(
+    'click',
+    generateCalendar
+  );
 
 
 loadTeams();
