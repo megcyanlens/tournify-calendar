@@ -162,3 +162,33 @@ window.findTeam = async (tournamentId, teamName) => {
   );
 
 };
+
+window.findLondonFireMatches = async () => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      '6IXXjNnmPXwgWw6GXNPS',
+      'matches'
+    )
+  );
+
+  const matches =
+    snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+  const fireMatches =
+    matches.filter(match =>
+      match.team1 === 2 ||
+      match.team2 === 2 ||
+      match.referee === 'yoDaAzO0m8ZU0TF1565J'
+    );
+
+  console.table(fireMatches);
+
+  return fireMatches;
+
+};
