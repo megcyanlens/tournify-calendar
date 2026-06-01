@@ -1,24 +1,22 @@
 document
-  .getElementById('generate')
+  .getElementById('generateBtn')
   .addEventListener('click', async () => {
 
     const url =
       document.getElementById('teamUrl').value;
 
-    const html =
-      await fetch(url)
-        .then(r => r.text());
+    const parts =
+      url.split('/');
 
-    console.log(
-      html.includes('London Fire')
-    );
+    const liveLink =
+      parts[4];
 
-    console.log(
-      html.includes('Match')
-    );
+    const teamId =
+      parts[6];
 
-    console.log(
-      html.includes('Stuttgart Scorpions')
-    );
+    console.log({
+      liveLink,
+      teamId
+    });
 
-  });
+});
