@@ -359,16 +359,22 @@ window.renderMatches = (
       'results'
     );
 
-    const teamLookup = {};
-    
-    window.bigBowlTeams.forEach(team => {
-    
-      teamLookup[
-        `${team.poule0}-${team.numInPoule0}`
-      ] = team.name;
-    
-    });
-
+        const teamLookup = {};
+        
+        window.bigBowlTeams.forEach(t => {
+        
+          teamLookup[
+            `${t.poule0}-${t.numInPoule0}`
+          ] = t.name;
+        
+        });
+      playingMatches.sort(
+        (a, b) => a.st.localeCompare(b.st)
+      );
+      
+      refereeMatches.sort(
+        (a, b) => a.st.localeCompare(b.st)
+      );
   
   let html = `
     <h2>${team.name}</h2>
