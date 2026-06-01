@@ -262,6 +262,20 @@ window.loadTeams = async () => {
 
     select.innerHTML = '';
 
+      const placeholder =
+  document.createElement('option');
+
+placeholder.value = '';
+placeholder.textContent =
+  'Select a team...';
+
+placeholder.selected = true;
+placeholder.disabled = true;
+
+select.appendChild(
+  placeholder
+);
+
     teams.forEach(team => {
 
       const option =
