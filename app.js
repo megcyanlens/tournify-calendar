@@ -292,41 +292,48 @@ document
 
     }
   );
-window.getMatchesForTeam =
-  async team => {
+window.getMatchesForTeam = async (team) => {
 
-    const snapshot =
-      await getDocs(
-        collection(
-          db,
-          'tournaments',
-          TOURNAMENT_ID,
-          'matches'
-        )
-      );
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      TOURNAMENT_ID,
+      'matches'
+    )
+  );
 
-    const matches =
-      snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+  const matches = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
-    console.log(
-      'selected team',
-      team
-    );
+  const teamMatches = matches.filter(match =>
+    match.team1 === team.numInPoule0 ||
+    match.team2 === team.numInPoule0 ||
+    match.referee === team.id
+  );
 
-   console.table(
-  matches.slice(0, 20).map(match => ({
-    day: match.day,
-    st: match.st,
-    team1: match.team1,
-    team2: match.team2,
-    referee: match.referee
-  }))
-);
+  console.log('team', team.name);
+  console.log('matches', teamMatches.length);
 
-  };
+  console.table(
+    teamMatches.map(match => ({
+      day: match.day,
+      start: match.st,
+      team1: match.team1,
+      team2: match.team2,
+      referee: match.referee,
+      field: match.field
+    }))
+  );
+
+  return teamMatches;
+
+};
+
+
+
 loadTeams();
 
 console.log('app loaded');
