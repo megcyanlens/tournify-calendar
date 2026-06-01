@@ -6,42 +6,71 @@ const params =
 const LIVE_LINK =
   params.get('tournament');
 
+window.renderTournamentPicker =
+  async () => {
+
+    document.getElementById(
+      'results'
+    ).innerHTML = `
+      <div class="empty-state">
+
+        <div class="empty-state__icon">
+          🏆
+        </div>
+
+        <h3>
+          No Tournament Selected
+        </h3>
+
+        <p>
+          Search for an upcoming tournament.
+        </p>
+
+        <input
+          id="tournamentSearch"
+          list="tournamentList"
+          placeholder="Search tournament..."
+        >
+
+        <datalist
+          id="tournamentList"
+        ></datalist>
+
+      </div>
+    `;
+
+    const tournaments =
+      await getUpcomingTournaments();
+
+    const list =
+      document.getElementById(
+        'tournamentList'
+      );
+
+    tournaments.forEach(t => {
+
+      const option =
+        document.createElement(
+          'option'
+        );
+
+      option.value =
+        t.name;
+
+      list.appendChild(
+        option
+      );
+
+    });
+
+};
+
 window.loadTournamentFromLiveLink =
   async () => {
 
 if (!LIVE_LINK) {
-document.getElementById(
-  'pageTitle'
-).textContent =
-  'No Tournament Found';
-
-document.getElementById(
-  'controls'
-).style.display =
-  'none';
-
-document.getElementById(
-  'results'
-).innerHTML = `
-  <div class="empty-state">
-
-    <div class="empty-state__icon">
-      🏆
-    </div>
-
-    <h3>
-      No Tournament Found
-    </h3>
-
-    <p>
-      Check the tournament URL and try again.
-    </p>
-
-  </div>
-`;
-
+await renderTournamentPicker();
 return false;
-
 }
     
 
@@ -61,39 +90,8 @@ return false;
       await getDocs(q);
 
     if (!snapshot.docs.length) {
-
-       document.getElementById(
-          'pageTitle'
-        ).textContent =
-          'No Tournament Found';
-        
-        document.getElementById(
-          'controls'
-        ).style.display =
-          'none';
-        
-        document.getElementById(
-          'results'
-        ).innerHTML = `
-          <div class="empty-state">
-        
-            <div class="empty-state__icon">
-              🏆
-            </div>
-        
-            <h3>
-              No Tournament Found
-            </h3>
-        
-            <p>
-              Check the tournament URL and try again.
-            </p>
-        
-          </div>
-        `;
-        
-        return false;
-        
+    await renderTournamentPicker();
+    return false;
         }
 
     const tournamentDoc =
