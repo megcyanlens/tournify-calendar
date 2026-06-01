@@ -708,7 +708,9 @@ CALSCALE:GREGORIAN
 
   ics +=
 `END:VCALENDAR`;
-
+  
+console.log(ics);
+  
   downloadICS(
     ics,
     `${window.selectedTeam.name}.ics`
