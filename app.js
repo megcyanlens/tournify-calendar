@@ -764,7 +764,7 @@ if (eventIsOver) {
     team.division
   ] || team.division;
 
-  const flag =
+const flag =
   (team.country || '')
     .toUpperCase()
     .replace(
