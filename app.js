@@ -252,63 +252,60 @@ window.testFirestore = async () => {
 window.getUpcomingTournaments =
   async () => {
 
-const now =
-  Math.floor(
-    Date.now() / 1000
-  );
+    const now =
+      Math.floor(
+        Date.now() / 1000
+      );
 
-const fourteenDays =
-  now +
-  (14 * 24 * 60 * 60);
+    const fourteenDays =
+      now +
+      (14 * 24 * 60 * 60);
 
-const q = query(
-  collection(
-    db,
-    'tournaments'
-  ),
-  where(
-    'date',
-    '>=',
-    now
-  ),
-  where(
-    'date',
-    '<=',
-    fourteenDays
-  ),
-  limit(2000)
-);
+    const q = query(
+      collection(
+        db,
+        'tournaments'
+      ),
+      where(
+        'date',
+        '>=',
+        now
+      ),
+      where(
+        'date',
+        '<=',
+        fourteenDays
+      ),
+      limit(2000)
+    );
 
     const snapshot =
       await getDocs(q);
 
-  return snapshot.docs
-  .map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }))
-  .filter(
-    t =>
-      t.liveLink &&
-      t.date >= now &&
-      t.date <= fourteenDays
-  )
-  .sort(
-    (a, b) =>
-      a.date - b.date
-  );
-   const tournaments =
-  snapshot.docs
-    .map(...)
-    .filter(...)
-    .sort(...);
+    const tournaments =
+      snapshot.docs
+        .map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        .filter(
+          t =>
+            t.liveLink &&
+            t.date >= now &&
+            t.date <= fourteenDays
+        )
+        .sort(
+          (a, b) =>
+            a.date - b.date
+        );
 
-console.log(
-  'upcoming tournaments:',
-  tournaments.length
-);
+    console.log(
+      'upcoming tournaments:',
+      tournaments.length
+    );
 
-return tournaments; 
+    return tournaments;
+
   };
 
 
