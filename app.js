@@ -86,22 +86,12 @@ search.addEventListener(
   'change',
   () => {
 
-    console.log(
-      'search value:',
-      search.value
-    );
-
     const selected =
       tournaments.find(
         t =>
           t.name ===
           search.value
       );
-
-    console.log(
-      'selected:',
-      selected
-    );
 
     if (!selected) {
       return;
@@ -146,34 +136,6 @@ return false;
 
     const snapshot =
       await getDocs(q);
-
-    
-    console.log(
-  'First tournament date:',
-  snapshot.docs[0]?.data().date
-);
-
-console.log(
-  'Last tournament date:',
-  snapshot.docs[
-    snapshot.docs.length - 1
-  ]?.data().date
-);
-
-console.log(
-  'Sample dates:',
-  snapshot.docs
-    .slice(0, 20)
-    .map(doc => doc.data().date)
-);
-console.log(
-  'Big Bowl in snapshot:',
-  snapshot.docs.find(
-    doc =>
-      doc.data().liveLink ===
-      'bigbowl2026'
-  )
-);
     
     if (!snapshot.docs.length) {
       document.getElementById(
@@ -318,7 +280,7 @@ console.log(
         orderBy(
           'date'
         ),
-        limit(10000)
+        limit(15000)
       );
 
     const snapshot =
@@ -362,21 +324,6 @@ console.log(
           (a, b) =>
             a.date - b.date
         );
-
-    
-    console.log(
-      'upcoming tournaments:',
-      tournaments.length
-    );
-console.table(
-  tournaments.map(t => ({
-    name: t.name,
-    liveLink: t.liveLink,
-    date: new Date(
-      t.date * 1000
-    ).toLocaleDateString()
-  }))
-);
     return tournaments;
 
   };
