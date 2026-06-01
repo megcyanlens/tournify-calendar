@@ -450,7 +450,11 @@ document
           document.getElementById(
             'results'
           ).innerHTML = '';
-        
+  
+        document.querySelector(
+  '.calendar-action'
+).style.display = 'none';
+          
           const generateButton =
             document.getElementById(
               'generateBtn'
@@ -605,6 +609,9 @@ const teamMatches = [
 
   window.selectedTeam = team;
   
+  document.querySelector(
+  '.calendar-action'
+).style.display = 'block';
 
   renderMatches(
   team,
@@ -1220,5 +1227,7 @@ document.getElementById(
 
   </div>
 `;
-
+  document.querySelector(
+  '.calendar-action'
+).style.display = 'none';
 })();
