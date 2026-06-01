@@ -1,8 +1,13 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+
 import {
   getFirestore,
+  collection,
+  getDocs,
   doc,
-  getDoc
+  getDoc,
+  query,
+  where
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -13,6 +18,25 @@ const firebaseConfig = {
   messagingSenderId: "659831913509",
   appId: "1:659831913509:web:1295743f7e5becfcaf13cc"
 };
+
+window.findTournament = async (liveLink) => {
+
+  const q = query(
+    collection(db, 'tournaments'),
+    where('liveLink', '==', liveLink)
+  );
+
+  const snapshot = await getDocs(q);
+
+  console.log(
+    snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }))
+  );
+
+};
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
