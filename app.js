@@ -140,3 +140,25 @@ window.getMatches = async (tournamentId) => {
   return matches;
 
 };
+
+window.findTeam = async (tournamentId, teamName) => {
+
+  const snapshot = await getDocs(
+    collection(
+      db,
+      'tournaments',
+      tournamentId,
+      'teams'
+    )
+  );
+
+  const teams = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+
+  return teams.find(
+    t => t.name === teamName
+  );
+
+};
