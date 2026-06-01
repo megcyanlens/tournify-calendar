@@ -268,7 +268,7 @@ const q = query(
     '<=',
     thirtyDays
   ),
-  limit(100)
+  limit(1000)
 );
 
     const snapshot =
