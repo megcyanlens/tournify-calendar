@@ -248,9 +248,14 @@ window.loadTeams = async () => {
 
   });
 
-  window.bigBowlTeams =
-    teams;
+window.bigBowlTeams = teams;
 
+if (teams.length) {
+  select.value = teams[0].id;
+}
+  select.dispatchEvent(
+  new Event('change')
+);
 };
 document
   .getElementById('teamSelect')
@@ -291,10 +296,17 @@ window.getMatchesForTeam =
       team
     );
 
-    console.log(
-      'all matches',
-      matches
-    );
+   console.table(
+  matches.slice(0, 20).map(match => ({
+    day: match.day,
+    st: match.st,
+    team1: match.team1,
+    team2: match.team2,
+    referee: match.referee
+  }))
+);
 
   };
 loadTeams();
+
+console.log('app loaded');
