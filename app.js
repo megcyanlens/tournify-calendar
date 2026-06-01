@@ -286,28 +286,8 @@ console.log(
     const snapshot =
       await getDocs(q);
 
-console.log(
-  'snapshot size:',
-  snapshot.size
 );
 
-console.log(
-  snapshot.docs
-    .slice(0, 20)
-    .map(doc => ({
-      name: doc.data().name,
-      liveLink: doc.data().liveLink,
-      date: doc.data().date
-    }))
-);
-    console.log(
-  'Big Bowl in upcoming query:',
-  snapshot.docs.find(
-    doc =>
-      doc.data().liveLink ===
-      'bigbowl2026'
-  )
-);
     const tournaments =
       snapshot.docs
         .map(doc => ({
