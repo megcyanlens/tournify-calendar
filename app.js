@@ -649,8 +649,7 @@ if (!window.selectedTeam) {
 
   const duration = getEventDurationMinutes();
 
-  let ics =
-`BEGIN:VCALENDAR
+let ics = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Tournify Calendar Exporter//EN
 CALSCALE:GREGORIAN
@@ -692,22 +691,20 @@ CALSCALE:GREGORIAN
         ? `${team1} vs ${team2}`
         : `Referee: ${team1} vs ${team2}`;
 
-      ics +=
-      `BEGIN:VEVENT
-      UID:${crypto.randomUUID()}
-      DTSTAMP:${formatICSDate(new Date())}
-      DTSTART:${startUtc}
-      DTEND:${endUtc}
-      SUMMARY:${title}
-      DESCRIPTION:${title}
-      LOCATION:${fieldName}, ${getVenue()}
-      END:VEVENT
-      `;
+ics += `BEGIN:VEVENT
+UID:${crypto.randomUUID()}
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART:${startUtc}
+DTEND:${endUtc}
+SUMMARY:${title}
+DESCRIPTION:${title}
+LOCATION:${fieldName}, ${getVenue()}
+END:VEVENT
+`;
 
   });
 
-  ics +=
-`END:VCALENDAR`;
+ics += `END:VCALENDAR`;
   
 console.log(ics);
   
