@@ -252,41 +252,27 @@ window.getUpcomingTournaments =
       now +
       (10 * 24 * 60 * 60);
 
-console.log(
-  'now',
-  now
-);
-
-console.log(
-  'daysLimit',
-  daysLimit
-);
-    
     const q = query(
-        collection(
-          db,
-          'tournaments'
-        ),
-        where(
-          'date',
-          '>=',
-          now
-        ),
-        where(
-          'date',
-          '<=',
-          daysLimit
-        ),
-        orderBy(
-          'date'
-        ),
-        limit(10000)
-      );
+      collection(
+        db,
+        'tournaments'
+      ),
+      where(
+        'date',
+        '>=',
+        now
+      ),
+      where(
+        'date',
+        '<=',
+        daysLimit
+      ),
+      orderBy('date'),
+      limit(10000)
+    );
 
     const snapshot =
       await getDocs(q);
-
-);
 
     const tournaments =
       snapshot.docs
@@ -304,6 +290,12 @@ console.log(
           (a, b) =>
             a.date - b.date
         );
+
+ //   console.log(
+  //    'upcoming tournaments:',
+  //    tournaments.length
+  //  );
+
     return tournaments;
 
   };
