@@ -9,6 +9,28 @@ const LIVE_LINK =
 window.loadTournamentFromLiveLink =
   async () => {
 
+if (!LIVE_LINK) {
+
+  document.getElementById(
+    'pageTitle'
+  ).textContent =
+    'No Tournament Selected';
+
+  document.getElementById(
+    'teamSelect'
+  ).style.display =
+    'none';
+
+  document.getElementById(
+    'generateBtn'
+  ).style.display =
+    'none';
+
+  return false;
+
+}
+    
+
     const q = query(
       collection(
         db,
@@ -443,6 +465,14 @@ window.renderMatches = (
 
 const now = new Date();
 
+  const upcomingRefereeMatches =
+  refereeMatches.filter(
+    match =>
+      buildDateTime(
+        match.day,
+        match.st
+      ) > now
+  );
   
 const upcomingMatches =
   playingMatches.filter(match =>
@@ -491,7 +521,7 @@ window.currentUpcomingMatches =
     upcomingMatches;
 
   window.currentRefereeMatches =
-    refereeMatches;
+    upcomingRefereeMatches;
   
 const generateButton =
   document.getElementById(
@@ -662,7 +692,7 @@ html += `
  }
 
   if (
-  refereeMatches.length > 0
+  upcomingRefereeMatches.length > 0
 ) {
 
   html += `
@@ -677,8 +707,8 @@ html += `
       </tr>
   `;
 
-  refereeMatches.forEach(match => {
-
+upcomingRefereeMatches.forEach(match => {
+  
     html += `
       <tr>
         <td>${match.st}</td>
