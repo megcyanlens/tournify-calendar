@@ -5,20 +5,20 @@ document
     const url =
       document.getElementById('teamUrl').value;
 
-    try {
+    const html =
+      await fetch(url)
+        .then(r => r.text());
 
-      const response =
-        await fetch(url);
+    console.log(
+      html.includes('London Fire')
+    );
 
-      const html =
-        await response.text();
+    console.log(
+      html.includes('Match')
+    );
 
-      console.log(html.substring(0, 1000));
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
+    console.log(
+      html.includes('Stuttgart Scorpions')
+    );
 
   });
