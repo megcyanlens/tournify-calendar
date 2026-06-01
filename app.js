@@ -9,9 +9,21 @@ const LIVE_LINK =
 window.renderTournamentPicker =
   async () => {
 
-    document.getElementById(
-      'results'
-    ).innerHTML = `
+        document.getElementById(
+          'results'
+        ).innerHTML = `
+          <div class="empty-state">
+        
+            <div class="spinner"></div>
+        
+            <h3>
+              Loading Tournaments...
+            </h3>
+        
+          </div>
+        `;
+
+    
       <div class="empty-state">
 
         <div class="empty-state__icon">
@@ -55,7 +67,9 @@ window.renderTournamentPicker =
         );
 
       option.value =
-        t.name;
+  `${t.name} (${new Date(
+    t.date * 1000
+  ).toLocaleDateString()})`;
 
       list.appendChild(
         option
@@ -71,12 +85,14 @@ search.addEventListener(
   'change',
   () => {
 
-    const selected =
-      tournaments.find(
-        t =>
-          t.name ===
-          search.value
-      );
+   const selected =
+  tournaments.find(
+    t =>
+      `${t.name} (${new Date(
+        t.date * 1000
+      ).toLocaleDateString()})`
+      === search.value
+  );
 
     if (!selected) {
       return;
@@ -177,7 +193,8 @@ import {
   doc,
   getDoc,
   query,
-  where
+  where, 
+  limit
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -223,41 +240,37 @@ window.testFirestore = async () => {
 window.getUpcomingTournaments =
   async () => {
 
-    console.log('starting');
-
     const now =
       Math.floor(
         Date.now() / 1000
       );
 
-    const q = query(
-      collection(
-        db,
-        'tournaments'
-      ),
-      where(
-        'date',
-        '>=',
-        now
-      )
-    );
-
-    console.log('query built');
+    const thirtyDays =
+      now +
+      (30 * 24 * 60 * 60);
 
     const snapshot =
-      await getDocs(q);
+      await getDocs(
+        collection(
+          db,
+          'tournaments'
+        )
+      );
 
-    console.log(
-      'loaded',
-      snapshot.docs.length
-    );
-
-    return snapshot.docs.map(
-      doc => ({
+    return snapshot.docs
+      .map(doc => ({
         id: doc.id,
         ...doc.data()
-      })
-    );
+      }))
+      .filter(
+        t =>
+          t.date >= now &&
+          t.date <= thirtyDays
+      )
+      .sort(
+        (a, b) =>
+          a.date - b.date
+      );
 
   };
 
