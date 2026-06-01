@@ -17,12 +17,7 @@ if (!LIVE_LINK) {
     'No Tournament Selected';
 
   document.getElementById(
-    'teamSelect'
-  ).style.display =
-    'none';
-
-  document.getElementById(
-    'generateBtn'
+    'controls'
   ).style.display =
     'none';
 
