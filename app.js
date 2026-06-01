@@ -274,16 +274,25 @@ const q = query(
     const snapshot =
       await getDocs(q);
 
-    return snapshot.docs
-      .map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }))
-      .sort(
-        (a, b) =>
-          a.date - b.date
-      );
-
+  return snapshot.docs
+  .map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }))
+  .filter(
+    t =>
+      t.liveLink &&
+      t.date >= now &&
+      t.date <= thirtyDays
+  )
+  .sort(
+    (a, b) =>
+      a.date - b.date
+  );
+console.log(
+  'upcoming tournaments:',
+  tournaments.length
+);
   };
 
 
