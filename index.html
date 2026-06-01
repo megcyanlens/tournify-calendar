@@ -214,9 +214,24 @@ h3 {
 
 @media (max-width: 768px) {
 
-  .stats {
-    grid-template-columns: 1fr;
+ .stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
+
+  .stat-card {
+    padding: 16px 8px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+}
 
   .toolbar {
     flex-direction: column;
