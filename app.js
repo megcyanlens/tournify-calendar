@@ -22,7 +22,12 @@ window.renderTournamentPicker =
         
           </div>
         `;
+  const tournaments =
+      await getUpcomingTournaments();
 
+    document.getElementById(
+      'results'
+    ).innerHTML = `
     
       <div class="empty-state">
 
