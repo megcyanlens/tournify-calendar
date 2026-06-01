@@ -409,9 +409,6 @@ const teamMatches = [
 
   window.selectedTeam = team;
   
-// console.log('playing',playingMatches.length);
-//console.log('refereeing',refereeMatches.length);
-//console.log('total',teamMatches.length);
 
   renderMatches(
   team,
@@ -421,8 +418,8 @@ const teamMatches = [
 
   window.currentTeam = team;
 
-  window.currentPlayingMatches =
-    playingMatches;
+  window.currentUpcomingMatches =
+    upcomingMatches;
 
   window.currentRefereeMatches =
     refereeMatches;
@@ -457,6 +454,24 @@ window.renderMatches = (
       refereeMatches.sort(
         (a, b) => a.st.localeCompare(b.st)
       );
+
+const now = new Date();
+
+const upcomingMatches =
+  playingMatches.filter(match =>
+    buildDateTime(
+      match.day,
+      match.st
+    ) > now
+  );
+
+const playedMatches =
+  playingMatches.filter(match =>
+    buildDateTime(
+      match.day,
+      match.st
+    ) <= now
+  );
   
   let html = `
     <h2>${team.name}</h2>
@@ -481,8 +496,48 @@ window.renderMatches = (
   `;
 
   html += `
-    <h3>Playing Games</h3>
+<h3>Upcoming Games</h3>
+    <table border="1" cellpadding="6">
+      <tr>
+        <th>Time</th>
+        <th>Field</th>
+        <th>Team 1</th>
+        <th>Team 2</th>
+      </tr>
+  `;
 
+  upcomingMatches.forEach(match => {
+
+    html += `
+      <tr>
+        <td>${match.st}</td>
+        <td>${
+          window.tournamentFields[
+            match.field
+            ]?.name || match.field
+        }</td>
+     <td>
+  ${
+    teamLookup[
+      `${match.poule}-${match.team1}`
+    ] || match.team1
+  }
+</td>
+
+<td>
+  ${
+    teamLookup[
+      `${match.poule}-${match.team2}`
+    ] || match.team2
+  }
+</td>
+      </tr>
+    `;
+
+  });
+
+  html += `
+<h3>Played Games</h3>
     <table border="1" cellpadding="6">
       <tr>
         <th>Time</th>
@@ -525,6 +580,11 @@ window.renderMatches = (
   html += `
     </table>
   `;
+
+
+  if (
+  refereeMatches.length > 0
+) {
 
   html += `
     <h3>Referee Games</h3>
@@ -573,7 +633,7 @@ window.renderMatches = (
   `;
 
   results.innerHTML = html;
-
+  }
 };
 
 function buildDateTime(
@@ -679,7 +739,7 @@ if (!window.selectedTeam) {
   
   const calendarEvents = [
 
-    ...window.currentPlayingMatches.map(
+   ...window.currentUpcomingMatches.map(
       match => ({
         type: 'PLAYING',
         ...match
