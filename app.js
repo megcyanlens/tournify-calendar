@@ -47,7 +47,7 @@ window.loadTournamentFromLiveLink =
     document.getElementById(
   'pageTitle'
 ).textContent =
-  tournament.name;
+    window.tournamentInfo.name;
     
   };
 
@@ -196,7 +196,7 @@ window.loadTournamentInfo = async () => {
 document.getElementById(
   'pageTitle'
 ).textContent =
-  `${tournament.name} Calendar Exporter`;
+  `${  window.tournamentInfo.name} Calendar Exporter`;
 
   
   window.tournamentFields =
