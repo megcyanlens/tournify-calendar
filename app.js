@@ -10,18 +10,37 @@ window.loadTournamentFromLiveLink =
   async () => {
 
 if (!LIVE_LINK) {
+document.getElementById(
+  'pageTitle'
+).textContent =
+  'No Tournament Found';
 
-  document.getElementById(
-    'pageTitle'
-  ).textContent =
-    'No Tournament Selected';
+document.getElementById(
+  'controls'
+).style.display =
+  'none';
 
-  document.getElementById(
-    'controls'
-  ).style.display =
-    'none';
+document.getElementById(
+  'results'
+).innerHTML = `
+  <div class="empty-state">
 
-  return false;
+    <div class="empty-state__icon">
+      🏆
+    </div>
+
+    <h3>
+      No Tournament Found
+    </h3>
+
+    <p>
+      Check the tournament URL and try again.
+    </p>
+
+  </div>
+`;
+
+return false;
 
 }
     
@@ -43,37 +62,37 @@ if (!LIVE_LINK) {
 
     if (!snapshot.docs.length) {
 
+       document.getElementById(
+          'pageTitle'
+        ).textContent =
+          'No Tournament Found';
+        
         document.getElementById(
-            'pageTitle'
-          ).textContent =
-            'No Tournament Found';
+          'controls'
+        ).style.display =
+          'none';
         
-          document.getElementById(
-            'controls'
-          ).style.display =
-            'none';
+        document.getElementById(
+          'results'
+        ).innerHTML = `
+          <div class="empty-state">
         
-         document.getElementById(
-                'results'
-              ).innerHTML = `
-                <div class="empty-state">
-              
-                  <div class="empty-state__icon">
-                    🏆
-                  </div>
-              
-                  <h3>
-                    No Tournament Found
-                  </h3>
-              
-                  <p>
-                    Check the tournament URL and try again.
-                  </p>
-              
-                </div>
-              `;
+            <div class="empty-state__icon">
+              🏆
+            </div>
         
-          return false;
+            <h3>
+              No Tournament Found
+            </h3>
+        
+            <p>
+              Check the tournament URL and try again.
+            </p>
+        
+          </div>
+        `;
+        
+        return false;
         
         }
 
