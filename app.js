@@ -68,10 +68,8 @@ window.renderTournamentPicker =
           'option'
         );
 
-      option.value =
-        `${t.name} (${new Date(
-          t.date * 1000
-        ).toLocaleDateString()})`;
+     option.value =
+        t.name;
 
       list.appendChild(
         option
@@ -117,6 +115,7 @@ search.addEventListener(
 
   }
 );
+    
 };
 
 window.loadTournamentFromLiveLink =
@@ -298,10 +297,18 @@ const q = query(
     (a, b) =>
       a.date - b.date
   );
+   const tournaments =
+  snapshot.docs
+    .map(...)
+    .filter(...)
+    .sort(...);
+
 console.log(
   'upcoming tournaments:',
   tournaments.length
 );
+
+return tournaments; 
   };
 
 
