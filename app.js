@@ -322,6 +322,8 @@ window.loadTeams = async () => {
 
    // console.log('select:', select );
 
+
+    
     select.innerHTML = '';
 
       const placeholder =
@@ -338,48 +340,48 @@ select.appendChild(
   placeholder
 );
 
-    window.bigBowlTeams = teams;
-    const divisionSelect =
-        document.getElementById(
-          'divisionSelect'
-        );
-      
-      const divisions =
-        [...new Set(
-          teams.map(
-            team => team.division
-          )
-        )];
-      
-      divisions.sort();
-      
-      divisionSelect.innerHTML =
-        '<option value="">Select a division...</option>';
-      
-      divisions.forEach(
-        division => {
-      
-          const option =
-            document.createElement(
-              'option'
-            );
-      
-          option.value =
-            division;
-      
-          option.textContent =
-            division === '0'
-              ? 'MEN / MIX'
-              : division === '1'
-              ? 'WOMEN'
-              : division;
-      
-          divisionSelect.appendChild(
-            option
-          );
-      
-        }
+
+window.bigBowlTeams = teams;
+
+const divisionSelect =
+  document.getElementById(
+    'divisionSelect'
+  );
+
+const divisions =
+  [...new Set(
+    teams.map(t => t.division)
+  )];
+
+divisionSelect.innerHTML =
+  '<option value="">Select a division...</option>';
+
+window.divisionNames = {
+  "0": "MEN / MIX",
+  "1683639950": "WOMEN"
+};
+
+divisions.forEach(
+  division => {
+
+    const option =
+      document.createElement(
+        'option'
       );
+
+    option.value = division;
+
+    option.textContent =
+      window.divisionNames[
+        division
+      ] || division;
+
+    divisionSelect.appendChild(
+      option
+    );
+
+  }
+);
   } catch (error) {
 
     console.error(
