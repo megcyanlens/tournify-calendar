@@ -146,7 +146,16 @@ return false;
 
     const snapshot =
       await getDocs(q);
-
+    
+console.log(
+  'Big Bowl in snapshot:',
+  snapshot.docs.find(
+    doc =>
+      doc.data().liveLink ===
+      'bigbowl2026'
+  )
+);
+    
     if (!snapshot.docs.length) {
       document.getElementById(
           'controls'
@@ -257,9 +266,9 @@ window.getUpcomingTournaments =
         Date.now() / 1000
       );
 
-    const fourteenDays =
+    const daysLimit =
       now +
-      (14 * 24 * 60 * 60);
+      (10 * 24 * 60 * 60);
 
     const q = query(
       collection(
@@ -274,7 +283,7 @@ window.getUpcomingTournaments =
       where(
         'date',
         '<=',
-        fourteenDays
+        daysLimit
       ),
       limit(2000)
     );
@@ -292,7 +301,7 @@ window.getUpcomingTournaments =
           t =>
             t.liveLink &&
             t.date >= now &&
-            t.date <= fourteenDays
+            t.date <= daysLimit
         )
         .sort(
           (a, b) =>
