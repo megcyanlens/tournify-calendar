@@ -4,12 +4,18 @@ const TOURNAMENT_ID =
 const TOURNAMENT_NAME =
   'Big Bowl XVIII';
 
-const VENUE =
-  'Turngesellschaft Walldorf 1896 e.V., Okrifteler Straße, Mörfelden-Walldorf, Deutschland';
+const venue =
+  `${window.tournamentInfo.place},
+   ${window.tournamentInfo.placeSecondaryName}`;
 
-const MATCH_DURATION =
-  30;
+function getEventDurationMinutes() {
 
+  return (
+    Number(window.tournamentInfo.matchDuration) +
+    Number(window.tournamentInfo.timeBetweenMatches)
+  );
+
+}
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 
 import {
@@ -49,6 +55,15 @@ window.findTournament = async (liveLink) => {
 
 };
 
+const eventDuration =
+  getEventDurationMinutes();
+
+const startDateTime = ...;
+const endDateTime =
+  new Date(
+    startDateTime.getTime() +
+    eventDuration * 60000
+  );
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -214,6 +229,14 @@ window.findLondonFireMatches = async () => {
 
 };
 
+document
+  .getElementById('generateBtn')
+  .addEventListener(
+    'click',
+    generateCalendar
+  );
+
+
 window.loadTeams = async () => {
 
   try {
@@ -335,10 +358,10 @@ const teamMatches = [
 ];
 
   console.log('team', team.name);
-  console.log(
-  'playing',
-  playingMatches.length
-);
+
+  window.selectedTeam = team;
+  
+  console.log('playing',playingMatches.length);
 
 console.log(
   'refereeing',
@@ -372,7 +395,59 @@ window.renderMatches = (
   playingMatches,
   refereeMatches
 ) => {
+window.generateCalendar = () => {
 
+  const team =
+    window.selectedTeam;
+
+  if (!team) {
+
+    alert(
+      'Please select a team first'
+    );
+
+    return;
+
+  }
+
+  const eventDuration =
+    Number(
+      window.tournamentInfo.matchDuration
+    ) +
+    Number(
+      window.tournamentInfo.timeBetweenMatches
+    );
+
+  const calendarEvents =
+    window.calendarEvents.map(
+      event => {
+
+        const start =
+          buildDateTime(
+            event.day,
+            event.time
+          );
+
+        const end =
+          new Date(
+            start.getTime() +
+            eventDuration * 60000
+          );
+
+        return {
+          ...event,
+          start,
+          end
+        };
+
+      }
+    );
+
+  console.log(
+    calendarEvents
+  );
+
+};
   const results =
     document.getElementById(
       'results'
@@ -513,6 +588,43 @@ window.renderMatches = (
 
 };
 
+function buildDateTime(
+  day,
+  time
+) {
+
+  const baseDate =
+    new Date(
+      window.tournamentInfo.date * 1000
+    );
+
+  baseDate.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+  baseDate.setDate(
+    baseDate.getDate() +
+    Number(day)
+  );
+
+  const [
+    hours,
+    minutes
+  ] = time.split(':');
+
+  baseDate.setHours(
+    Number(hours),
+    Number(minutes)
+  );
+
+  return baseDate;
+
+}
+
+
 window.generateCalendar =
   async () => {
 
@@ -533,18 +645,23 @@ window.generateCalendar =
       )
 
     ];
-
+  window.calendarEvents =
+  calendarEvents;
+    
     calendarEvents.sort(
       (a, b) =>
         a.st.localeCompare(b.st)
     );
 
-    console.table(
+   console.table(
         calendarEvents.map(event => ({
           type: event.type,
           day: event.day,
           time: event.st,
-          field: event.field
+          field:
+            window.tournamentFields[
+              event.field
+            ]?.name || event.field
         }))
       );
 
