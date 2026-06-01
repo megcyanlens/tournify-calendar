@@ -141,10 +141,7 @@ window.loadTournamentInfo = async () => {
   window.tournamentFields =
     tournament.fields;
 
-  console.log(
-    'fields loaded',
-    tournament.fields
-  );
+//  console.log('fields loaded',tournament.fields );
 
 };
 window.getMatches = async (tournamentId) => {
@@ -221,7 +218,7 @@ window.loadTeams = async () => {
 
   try {
 
-    console.log('loading teams');
+    //console.log('loading teams');
 
     const snapshot = await getDocs(
       collection(
@@ -232,10 +229,7 @@ window.loadTeams = async () => {
       )
     );
 
-    console.log(
-      'team docs:',
-      snapshot.docs.length
-    );
+  //  console.log('team docs:',snapshot.docs.length);
 
     const teams =
       snapshot.docs
