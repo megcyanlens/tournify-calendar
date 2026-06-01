@@ -106,7 +106,8 @@ select {
 }
 
 .calendar-action {
-  text-align: center;
+   display: none;
+   text-align: center;
   margin: 30px 0;
 }
 
@@ -301,52 +302,43 @@ h3 {
 
    <div id="controls">
 
-  <section class="toolbar">
 
+<section class="toolbar">
 
-      <div class="field-group">
+  <div class="field-group">
 
-        <label for="divisionSelect">
-          Division
-        </label>
+    <label for="divisionSelect">
+      Division
+    </label>
 
-        <select id="divisionSelect">
+    <select id="divisionSelect"></select>
 
-          <option value="">
-            All Divisions
-          </option>
+  </div>
 
-        </select>
+  <div class="field-group">
 
-      </div>
+    <label for="teamSelect">
+      Team
+    </label>
 
-      <div class="field-group">
+    <select id="teamSelect"></select>
 
-        <label for="teamSelect">
-          Team
-        </label>
+  </div>
 
-        <select id="teamSelect">
+  <div class="field-group action-group">
 
-          <option value="">
-            Select a team...
-          </option>
+    <label>
+      &nbsp;
+    </label>
 
-        </select>
+    <button id="generateBtn">
+      Generate Calendar
+    </button>
 
-      </div>
+  </div>
 
-    </section>
-
-<div class="calendar-action">
-
-  <button
-    id="generateBtn"
-  >
-    Generate Calendar
-  </button>
-
-</div>
+</section>
+     
 
 </div>
     
