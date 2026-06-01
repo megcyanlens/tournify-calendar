@@ -22,7 +22,11 @@ window.renderTournamentPicker =
 
       </div>
     `;
-
+    
+      document.querySelector(
+        '.footer-btn'
+      ).style.display = 'none';
+    
     const tournaments =
       await getUpcomingTournaments();
 
@@ -116,7 +120,11 @@ if (!LIVE_LINK) {
   'controls'
 ).style.display =
   'none';
-
+  
+document.querySelector(
+  '.footer-btn'
+).style.display = 'inline-flex';
+  
 await renderTournamentPicker();
 return false;
 }
