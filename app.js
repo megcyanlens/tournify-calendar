@@ -101,7 +101,6 @@ window.testBigBowl = async () => {
   }
 
 };
-
 window.getTeams = async (tournamentId) => {
 
   const snapshot = await getDocs(
@@ -121,7 +120,33 @@ window.getTeams = async (tournamentId) => {
   );
 
 };
+window.tournamentFields = {};
 
+window.loadTournamentInfo = async () => {
+
+  const snapshot = await getDoc(
+    doc(
+      db,
+      'tournaments',
+      TOURNAMENT_ID
+    )
+  );
+
+  const tournament =
+    snapshot.data();
+
+  window.tournamentInfo =
+    tournament;
+
+  window.tournamentFields =
+    tournament.fields;
+
+  console.log(
+    'fields loaded',
+    tournament.fields
+  );
+
+};
 window.getMatches = async (tournamentId) => {
 
   const snapshot = await getDocs(
@@ -417,7 +442,11 @@ window.renderMatches = (
     html += `
       <tr>
         <td>${match.st}</td>
-        <td>${match.field}</td>
+        <td>${
+          window.tournamentFields[
+            match.field
+            ]?.name || match.field
+        }</td>
      <td>
   ${
     teamLookup[
@@ -459,7 +488,11 @@ window.renderMatches = (
     html += `
       <tr>
         <td>${match.st}</td>
-        <td>${match.field}</td>
+        <td>${
+           window.tournamentFields[
+            match.field
+            ]?.name || match.field
+          }</td>
         <td>
   ${
     teamLookup[
@@ -532,6 +565,12 @@ window.generateCalendar =
   );
 
 
-loadTeams();
+await loadTournamentInfo();
+await loadTeams();
 
-console.log('app loaded');
+(async () => {
+
+  await loadTournamentInfo();
+  await loadTeams();
+
+})();
