@@ -214,10 +214,6 @@ console.log(
     return true;
   };
 
-
-
-
-
 function getEventDurationMinutes() {
 
   return (
@@ -236,7 +232,8 @@ import {
   getDoc,
   query,
   where, 
-  limit
+  limit,
+  orderBy
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -304,22 +301,25 @@ console.log(
 );
     
     const q = query(
-      collection(
-        db,
-        'tournaments'
-      ),
-      where(
-        'date',
-        '>=',
-        now
-      ),
-      where(
-        'date',
-        '<=',
-        daysLimit
-      ),
-      limit(2000)
-    );
+        collection(
+          db,
+          'tournaments'
+        ),
+        where(
+          'date',
+          '>=',
+          now
+        ),
+        where(
+          'date',
+          '<=',
+          daysLimit
+        ),
+        orderBy(
+          'date'
+        ),
+        limit(2000)
+      );
 
     const snapshot =
       await getDocs(q);
