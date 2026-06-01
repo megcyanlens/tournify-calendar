@@ -254,7 +254,8 @@ window.getUpcomingTournaments =
         'date',
         '>=',
         now
-      )
+      ),
+      limit(100)
     );
 
     const snapshot =
