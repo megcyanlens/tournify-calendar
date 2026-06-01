@@ -58,7 +58,7 @@ window.testFirestore = async () => {
   const snapshot =
     await getDocs(collection(db, 'tournaments'));
 
-  console.log(
+  console.log(Fta
     'count:',
     snapshot.docs.length
   );
@@ -193,8 +193,6 @@ window.findLondonFireMatches = async () => {
       match.team2 === 2 ||
       match.referee === 'yoDaAzO0m8ZU0TF1565J'
     );
-
-  console.table(fireMatches);
 
   return fireMatches;
 
