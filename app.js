@@ -117,6 +117,7 @@ search.addEventListener(
 
   }
 );
+};
 
 window.loadTournamentFromLiveLink =
   async () => {
