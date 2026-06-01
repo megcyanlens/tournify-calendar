@@ -757,29 +757,62 @@ if (eventIsOver) {
     team.division
   ] || team.division;
 
-      html += `
-        <h2>
-          ${team.name} - ${divisionName}
-        </h2>
+     html += `
+  <div class="team-card">
 
-    <p>
-      Playing:
-      ${playingMatches.length}
-    </p>
+    <h2>
+      ${team.name}
+    </h2>
 
-    <p>
-      Refereeing:
-      ${refereeMatches.length}
-    </p>
+    <div class="division-badge">
+      ${divisionName}
+    </div>
 
-    <p>
-      Total:
-      ${
-        playingMatches.length +
-        refereeMatches.length
-      }
-    </p>
-  `;
+  </div>
+
+  <div class="stats">
+
+    <div class="stat-card">
+
+      <div class="stat-value">
+        ${playingMatches.length}
+      </div>
+
+      <div class="stat-label">
+        Playing
+      </div>
+
+    </div>
+
+    <div class="stat-card">
+
+      <div class="stat-value">
+        ${refereeMatches.length}
+      </div>
+
+      <div class="stat-label">
+        Refereeing
+      </div>
+
+    </div>
+
+    <div class="stat-card">
+
+      <div class="stat-value">
+        ${
+          playingMatches.length +
+          refereeMatches.length
+        }
+      </div>
+
+      <div class="stat-label">
+        Total
+      </div>
+
+    </div>
+
+  </div>
+`;
 
   if (upcomingMatches.length > 0) {
 
