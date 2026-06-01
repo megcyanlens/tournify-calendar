@@ -467,6 +467,33 @@ const playedMatches =
     ) <= now
   );
 
+const latestMatch =
+  playingMatches.reduce(
+    (latest, match) => {
+
+      const matchDate =
+        buildDateTime(
+          match.day,
+          match.st
+        );
+
+      return matchDate > latest
+        ? matchDate
+        : latest;
+
+    },
+    new Date(0)
+  );
+
+const eventIsOver =
+  latestMatch <
+  new Date(
+    Date.now() -
+    (24 * 60 * 60 * 1000)
+  );
+
+
+  
 window.currentUpcomingMatches =
     upcomingMatches;
 
@@ -479,9 +506,15 @@ const generateButton =
   );
 
 generateButton.disabled =
-  upcomingMatches.length === 0;
+  upcomingMatches.length === 0 ||
+  eventIsOver;
 
-  if (
+  if (eventIsOver) {
+
+  generateButton.textContent =
+    'Event Finished';
+
+} else if (
   upcomingMatches.length === 0
 ) {
 
@@ -492,6 +525,34 @@ generateButton.disabled =
 
   generateButton.textContent =
     'Generate Calendar';
+
+}
+
+  generateButton.textContent =
+    'No Upcoming Games';
+
+} else {
+
+  generateButton.textContent =
+    'Generate Calendar';
+
+}
+  let html = '';
+
+if (eventIsOver) {
+
+  html += `
+    <div style="
+      padding:20px;
+      background:#f5f5f5;
+      border:1px solid #ddd;
+      margin-bottom:20px;
+      font-size:20px;
+      font-weight:bold;
+    ">
+      This event is over!
+    </div>
+  `;
 
 }
   
