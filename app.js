@@ -4,9 +4,12 @@ const TOURNAMENT_ID =
 const TOURNAMENT_NAME =
   'Big Bowl XVIII';
 
-const venue =
-  `${window.tournamentInfo.place},
-   ${window.tournamentInfo.placeSecondaryName}`;
+function getVenue() {
+
+  return `${window.tournamentInfo.place},
+${window.tournamentInfo.placeSecondaryName}`;
+
+}
 
 function getEventDurationMinutes() {
 
@@ -379,7 +382,6 @@ window.renderMatches = (
   refereeMatches
 ) => {
 
-};
   const results =
     document.getElementById(
       'results'
