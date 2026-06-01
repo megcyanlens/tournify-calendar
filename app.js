@@ -45,10 +45,10 @@ window.loadTournamentFromLiveLink =
       window.tournamentInfo.fields;
 
     document.getElementById(
-      'pageTitle'
-    ).textContent =
-      `${window.tournamentInfo.name} Calendar Exporter`;
-
+  'pageTitle'
+).textContent =
+  tournament.name;
+    
   };
 
 //function getVenue() {
