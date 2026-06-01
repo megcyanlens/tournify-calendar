@@ -617,7 +617,12 @@ function downloadICS(
 }
 
 window.generateCalendar = () => {
-
+  
+if (!window.selectedTeam) {
+  alert('Select a team first');
+  return;
+}
+  
   const calendarEvents = [
 
     ...window.currentPlayingMatches.map(
@@ -642,9 +647,7 @@ window.generateCalendar = () => {
       buildDateTime(b.day, b.st)
   );
 
-  const duration =
-    Number(window.tournamentInfo.matchDuration) +
-    Number(window.tournamentInfo.timeBetweenMatches);
+  const duration = getEventDurationMinutes();
 
   let ics = `
 BEGIN:VCALENDAR
@@ -696,7 +699,8 @@ DTSTAMP:${formatICSDate(new Date())}
 DTSTART:${startUtc}
 DTEND:${endUtc}
 SUMMARY:${title}
-LOCATION:${fieldName}, ${window.tournamentInfo.place}
+DESCRIPTION:${title}
+LOCATION:${fieldName}, ${getVenue()}
 END:VEVENT
 `;
 
