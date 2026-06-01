@@ -451,8 +451,8 @@ document
             'results'
           ).innerHTML = '';
   
-        document.querySelector(
-  '.calendar-action'
+        document.getElementById(
+  'generateBtn'
 ).style.display = 'none';
           
           const generateButton =
@@ -609,8 +609,8 @@ const teamMatches = [
 
   window.selectedTeam = team;
   
-  document.querySelector(
-  '.calendar-action'
+  document.getElementById(
+  'generateBtn'
 ).style.display = 'block';
 
   renderMatches(
@@ -1251,7 +1251,7 @@ document.getElementById(
 
   </div>
 `;
-  document.querySelector(
-  '.calendar-action'
+  document.getElementById(
+  'generateBtn'
 ).style.display = 'none';
 })();
