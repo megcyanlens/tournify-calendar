@@ -219,13 +219,15 @@ window.findTournament = async (liveLink) => {
 
   const snapshot = await getDocs(q);
 
-  console.log(
+  const tournaments =
     snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }))
-  );
+    }));
 
+  console.log(tournaments);
+
+  return tournaments;
 };
 
 
