@@ -280,7 +280,7 @@ console.log(
         orderBy(
           'date'
         ),
-        limit(15000)
+        limit(10000)
       );
 
     const snapshot =
