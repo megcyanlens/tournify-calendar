@@ -765,33 +765,35 @@ if (eventIsOver) {
     team.division
   ] || team.division;
 
-     html += `
+    const country =
+  (team.country || '')
+    .toLowerCase();
+
+html += `
   <div class="team-card">
 
-    <h2>
-      ${team.name}
-    </h2>
+    <div class="team-card-header">
 
-    <div class="division-badge">
-      ${divisionName}
+      <div>
+
+        <h2>
+          ${team.name}
+        </h2>
+
+        <div class="division-badge">
+          ${divisionName}
+        </div>
+
+      </div>
+
+      <div class="team-country">
+        ${country.toUpperCase()}
+      </div>
+
     </div>
 
   </div>
-
-  <div class="stats">
-
-    <div class="stat-card">
-
-      <div class="stat-value">
-        ${playingMatches.length}
-      </div>
-
-      <div class="stat-label">
-        Playing
-      </div>
-
-    </div>
-
+  
     <div class="stat-card">
 
       <div class="stat-value">
