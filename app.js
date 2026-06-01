@@ -58,7 +58,7 @@ window.testFirestore = async () => {
   const snapshot =
     await getDocs(collection(db, 'tournaments'));
 
-  console.log(Fta
+  console.log(
     'count:',
     snapshot.docs.length
   );
