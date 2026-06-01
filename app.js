@@ -1158,4 +1158,26 @@ downloadICS(
 
   await loadTeams();
 
+document.getElementById(
+  'results'
+).innerHTML = `
+  <div class="empty-state">
+
+    <div class="empty-state__icon">
+      👥
+    </div>
+
+    <h3>
+      No Team Selected
+    </h3>
+
+    <p>
+      Select a team from the dropdown above
+      to view their schedule and export a
+      calendar.
+    </p>
+
+  </div>
+`;
+
 })();
