@@ -602,17 +602,36 @@ window.generateCalendar =
         }
       );
 
-   console.table(
-        calendarEvents.map(event => ({
-          type: event.type,
-          day: event.day,
-          time: event.st,
-          field:
-            window.tournamentFields[
-              event.field
-            ]?.name || event.field
-        }))
-      );
+function getDayName(day) {
+
+  const date =
+    new Date(
+      window.tournamentInfo.date * 1000
+    );
+
+  date.setDate(
+    date.getDate() +
+    Number(day)
+  );
+
+  return date.toLocaleDateString(
+    'en-GB',
+    { weekday: 'long' }
+  );
+
+}
+    
+  console.table(
+  calendarEvents.map(event => ({
+    type: event.type,
+    day: getDayName(event.day),
+    time: event.st,
+    field:
+      window.tournamentFields[
+        event.field
+      ]?.name || event.field
+  }))
+);
 
   };
     document
