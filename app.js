@@ -219,8 +219,11 @@ window.testFirestore = async () => {
   return snapshot.docs.length;
 
 };
+
 window.getUpcomingTournaments =
   async () => {
+
+    console.log('starting');
 
     const now =
       Math.floor(
@@ -239,20 +242,26 @@ window.getUpcomingTournaments =
       )
     );
 
+    console.log('query built');
+
     const snapshot =
       await getDocs(q);
 
-    return snapshot.docs
-      .map(doc => ({
+    console.log(
+      'loaded',
+      snapshot.docs.length
+    );
+
+    return snapshot.docs.map(
+      doc => ({
         id: doc.id,
         ...doc.data()
-      }))
-      .sort(
-        (a, b) =>
-          a.date - b.date
-      );
+      })
+    );
 
   };
+
+
 window.testBigBowl = async () => {
 
   try {
