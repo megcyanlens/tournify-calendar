@@ -557,83 +557,165 @@ function buildDateTime(
   return baseDate;
 
 }
+function formatICSDate(date) {
 
-
-window.generateCalendar =
-  async () => {
-
-    const calendarEvents = [
-
-      ...window.currentPlayingMatches.map(
-        match => ({
-          type: 'PLAYING',
-          ...match
-        })
-      ),
-
-      ...window.currentRefereeMatches.map(
-        match => ({
-          type: 'REFEREE',
-          ...match
-        })
-      )
-
-    ];
-  window.calendarEvents =
-  calendarEvents;
-    
-    calendarEvents.sort(
-        (a, b) => {
-      
-          const aDate =
-            buildDateTime(
-              a.day,
-              a.st
-            );
-      
-          const bDate =
-            buildDateTime(
-              b.day,
-              b.st
-            );
-      
-          return aDate - bDate;
-      
-        }
-      );
-
-function getDayName(day) {
-
-  const date =
-    new Date(
-      window.tournamentInfo.date * 1000
-    );
-
-  date.setDate(
-    date.getDate() +
-    Number(day)
-  );
-
-  return date.toLocaleDateString(
-    'en-GB',
-    { weekday: 'long' }
-  );
+  return date
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '');
 
 }
-    
-  console.table(
-  calendarEvents.map(event => ({
-    type: event.type,
-    day: getDayName(event.day),
-    time: event.st,
-    field:
+
+function getTeamName(
+  poule,
+  teamNum
+) {
+
+  const team =
+    window.bigBowlTeams.find(
+      t =>
+        t.poule0 === poule &&
+        t.numInPoule0 === teamNum
+    );
+
+  return team
+    ? team.name
+    : teamNum;
+
+}
+
+function downloadICS(
+  content,
+  filename
+) {
+
+  const blob =
+    new Blob(
+      [content],
+      {
+        type: 'text/calendar'
+      }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement('a');
+
+  a.href = url;
+  a.download = filename;
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+
+}
+
+window.generateCalendar = () => {
+
+  const calendarEvents = [
+
+    ...window.currentPlayingMatches.map(
+      match => ({
+        type: 'PLAYING',
+        ...match
+      })
+    ),
+
+    ...window.currentRefereeMatches.map(
+      match => ({
+        type: 'REFEREE',
+        ...match
+      })
+    )
+
+  ];
+
+  calendarEvents.sort(
+    (a, b) =>
+      buildDateTime(a.day, a.st) -
+      buildDateTime(b.day, b.st)
+  );
+
+  const duration =
+    Number(window.tournamentInfo.matchDuration) +
+    Number(window.tournamentInfo.timeBetweenMatches);
+
+  let ics = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Tournify Calendar Exporter//EN
+CALSCALE:GREGORIAN
+`;
+
+  calendarEvents.forEach(event => {
+
+    const start =
+      buildDateTime(
+        event.day,
+        event.st
+      );
+
+    const end =
+      new Date(
+        start.getTime() +
+        duration * 60000
+      );
+
+    const startUtc =
+      formatICSDate(start);
+
+    const endUtc =
+      formatICSDate(end);
+
+    const fieldName =
       window.tournamentFields[
         event.field
-      ]?.name || event.field
-  }))
-);
+      ]?.name || event.field;
 
-  };
+    const team1 =
+      getTeamName(event.poule, event.team1);
+
+    const team2 =
+      getTeamName(event.poule, event.team2);
+
+    const title =
+      event.type === 'PLAYING'
+        ? `${team1} vs ${team2}`
+        : `Referee: ${team1} vs ${team2}`;
+
+    ics += `
+BEGIN:VEVENT
+UID:${crypto.randomUUID()}
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART:${startUtc}
+DTEND:${endUtc}
+SUMMARY:${title}
+LOCATION:${fieldName}, ${window.tournamentInfo.place}
+END:VEVENT
+`;
+
+  });
+
+  ics += `
+END:VCALENDAR
+`;
+
+  downloadICS(
+    ics,
+    `${window.selectedTeam.name}.ics`
+  );
+
+};
+
+
+
+
     document
   .getElementById('generateBtn')
   .addEventListener(
