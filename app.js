@@ -245,28 +245,26 @@ window.getUpcomingTournaments =
         Date.now() / 1000
       );
 
-    const thirtyDays =
-      now +
-      (30 * 24 * 60 * 60);
+    const q = query(
+      collection(
+        db,
+        'tournaments'
+      ),
+      where(
+        'date',
+        '>=',
+        now
+      )
+    );
 
     const snapshot =
-      await getDocs(
-        collection(
-          db,
-          'tournaments'
-        )
-      );
+      await getDocs(q);
 
     return snapshot.docs
       .map(doc => ({
         id: doc.id,
         ...doc.data()
       }))
-      .filter(
-        t =>
-          t.date >= now &&
-          t.date <= thirtyDays
-      )
       .sort(
         (a, b) =>
           a.date - b.date
@@ -287,18 +285,8 @@ window.testBigBowl = async () => {
       )
     );
 
-   // console.log(
-   //   snapshot.exists()
-   // );
-
- //   console.log(
-    //  snapshot.data()
-   // );
-
   } catch (e) {
-
     console.error(e);
-
   }
 
 };
@@ -312,13 +300,6 @@ window.getTeams = async (tournamentId) => {
       'teams'
     )
   );
-
- // console.log(
-  //  snapshot.docs.map(doc => ({
-  //    id: doc.id,
-  //    ...doc.data()
-  //  }))
-  //);
 
 };
 window.tournamentFields = {};
@@ -398,8 +379,6 @@ window.loadTeams = async () => {
 
   try {
 
-    //console.log('loading teams');
-
     const snapshot = await getDocs(
       collection(
         db,
@@ -409,7 +388,6 @@ window.loadTeams = async () => {
       )
     );
 
-  //  console.log('team docs:',snapshot.docs.length);
 
     const teams =
       snapshot.docs
@@ -425,11 +403,7 @@ window.loadTeams = async () => {
       document.getElementById(
         'teamSelect'
       );
-
-   // console.log('select:', select );
-
-
-    
+      
     select.innerHTML = '';
 
       const placeholder =
