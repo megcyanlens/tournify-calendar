@@ -121,15 +121,22 @@ window.getMatches = async (tournamentId) => {
     )
   );
 
-  console.log(
-    snapshot.docs.length
-  );
+  const matches = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
 
-  console.log(
-    snapshot.docs.slice(0, 5).map(doc => ({
-      id: doc.id,
-      ...doc.data()
+  console.table(
+    matches.slice(0, 20).map(match => ({
+      day: match.day,
+      start: match.st,
+      field: match.field,
+      team1: match.team1,
+      team2: match.team2,
+      referee: match.referee
     }))
   );
+
+  return matches;
 
 };
