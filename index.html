@@ -211,7 +211,54 @@ h3 {
   margin-top: 32px;
   margin-bottom: 12px;
 }
+.footer-bar {
+  margin-top: 40px;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 12px;
 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  box-shadow:
+    0 2px 12px rgba(0,0,0,.08);
+}
+
+.footer-text {
+  font-size: 14px;
+  color: #666;
+}
+
+.footer-text a {
+  color: var(--tournament-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer-btn {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 10px 16px;
+
+  border-radius: 8px;
+
+  background: var(--tournament-color);
+  color: white;
+
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.footer-btn:hover {
+  opacity: .9;
+}
+  
 @media (max-width: 768px) {
 
  .stats {
@@ -230,6 +277,15 @@ h3 {
   .stat-label {
     font-size: 12px;
   }
+  .footer-bar {
+  flex-direction: column;
+  text-align: center;
+}
+
+.footer-btn {
+  width: 100%;
+  justify-content: center;
+}
 
 }
 
@@ -433,7 +489,29 @@ h3 {
     
    <div id="results"></div>
   </div>
+<footer class="footer-bar">
 
+  <div class="footer-text">
+    Vibe coded by
+    <a
+      href="https://www.instagram.com/meg_mac44/"
+      target="_blank"
+      rel="noopener"
+    >
+      Meghann MacDonald
+    </a>.
+    You're welcome!
+  </div>
+
+  <a
+    class="footer-btn"
+    href="/?tournament=undefined"
+  >
+    Search all upcoming tournaments
+  </a>
+
+</footer>
+  
   <script
     type="module"
     src="./app.js"
