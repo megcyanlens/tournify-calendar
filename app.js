@@ -6,6 +6,8 @@ const params =
 const LIVE_LINK =
   params.get('tournament');
 
+const TEAM_ID =
+  params.get('team');
 
 window.retry = async (
   fn,
@@ -1426,22 +1428,45 @@ document.getElementById(
   3,
   1500
 );
-   document.getElementById(
-  'controls'
-      ).style.display =
-        'block';
 
-showNoTeamSelected();
+if (TEAM_ID) {
+
+  const team =
+    window.bigBowlTeams.find(
+      t => t.id === TEAM_ID
+    );
+
+  if (team) {
+
+    const divisionSelect =
+      document.getElementById(
+        'divisionSelect'
+      );
+
+    divisionSelect.value =
+      String(team.division);
+
+    divisionSelect.dispatchEvent(
+      new Event('change')
+    );
+
+      const teamSelect =
+      document.getElementById(
+        'teamSelect'
+      );
+
+    teamSelect.value =
+      team.id;
+
+    await getMatchesForTeam(
+      team
+    );
+
+    return;
+  }
   
-} catch (e) {
-
-  console.error(e);
-
-   document.getElementById(
-    'controls'
-  ).style.display =
-    'none';
-
+}
+  
   document.getElementById(
     'results'
   ).innerHTML = `
