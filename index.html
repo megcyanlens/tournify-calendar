@@ -213,8 +213,6 @@ h3 {
 }
 .footer-bar {
   margin-top: 40px;
-  margin-left:24px;
-  margin-right:24px;
   padding: 16px 20px;
   background: white;
   border-radius: 12px;
@@ -263,7 +261,7 @@ h3 {
   
 @media (max-width: 768px) {
 
- .stats {
+  .stats {
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
   }
@@ -279,15 +277,61 @@ h3 {
   .stat-label {
     font-size: 12px;
   }
-  .footer-bar {
-  flex-direction: column;
-  text-align: center;
-}
 
-.footer-btn {
-  width: 100%;
-  justify-content: center;
-}
+  .footer-bar {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .field-group {
+    width: 100%;
+  }
+
+  select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .calendar-action {
+    width: 100%;
+  }
+
+  #generateBtn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .hero {
+    padding: 20px;
+  }
+
+  .hero__icon {
+    font-size: 40px;
+  }
+
+  .hero h1 {
+    font-size: 24px;
+  }
+
+  .hero h2 {
+    font-size: 16px;
+  }
 
 }
 
@@ -487,7 +531,6 @@ h3 {
 </section>
      
 
-</div>
     
    <div id="results"></div>
   </div>
@@ -512,7 +555,8 @@ h3 {
     Search all upcoming tournaments
   </a>
 </footer>
-  
+  </div>
+
   <script
     type="module"
     src="./app.js"
