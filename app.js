@@ -1480,6 +1480,3 @@ document.getElementById(
 }
 
 })();
-
-
-})();
