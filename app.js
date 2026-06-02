@@ -66,26 +66,7 @@ document.getElementById(
 
       </div>
     `;
-    
-console.log(
-      'renderTournamentPicker starting'
-    );
- const tournaments =
-      await getUpcomingTournaments();
 
-  console.log(
-      'tournaments loaded:',
-      tournaments.length
-    );
-    console.log(
-  'results element:',
-  document.getElementById('results')
-);
-    console.log(
-  'about to render search UI'
-);
-  
-    
    const footerBtn =
   document.querySelector(
     '.footer-btn'
@@ -95,8 +76,8 @@ if (footerBtn) {
   footerBtn.style.display =
     'none';
 }
-    
-   
+ const tournaments =
+      await getUpcomingTournaments();
 
     document.getElementById(
       'results'
@@ -114,6 +95,14 @@ if (footerBtn) {
         <p>
           Search for an upcoming tournament.
         </p>
+
+          <p style="
+                font-size:14px;
+                color:#6b7280;
+                margin-bottom:20px;
+              ">
+                ${tournaments.length} upcoming tournaments found
+              </p>
 
         <input
           id="tournamentSearch"
@@ -149,6 +138,11 @@ if (footerBtn) {
 
     });
 
+    document.getElementById(
+  'pageTitle'
+).textContent =
+  'Find a Tournament';
+    
 const search =
   document.getElementById(
     'tournamentSearch'
@@ -343,9 +337,6 @@ window.showNoTeamSelected = () => {
   
     document.getElementById('generateBtn').style.display = 'none';
 
-        //  const generateButton = document.getElementById('generateBtn'); 
-        //  generateButton.disabled = true;
-        // generateButton.textContent ='Generate Calendar';
 };
 
 window.getUpcomingTournaments =
