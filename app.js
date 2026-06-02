@@ -643,7 +643,23 @@ document
           // Clear currently selected team
           window.selectedTeam = null;
           window.currentTeam = null;
-          
+
+            const url =
+              new URL(
+                window.location
+              );
+            
+            url.searchParams.delete(
+              'team'
+            );
+            
+            window.history.replaceState(
+              {},
+              '',
+              url
+            );
+
+      
           showNoTeamSelected();
 
       teamSelect.disabled = false;
@@ -715,10 +731,34 @@ document
           t => t.id === e.target.value
         );
 
-     await window.getMatchesForTeam(team);
+      if (!team) {
+        return;
+      }
+
+      const url =
+        new URL(
+          window.location
+        );
+
+      url.searchParams.set(
+        'team',
+        team.id
+      );
+
+      window.history.replaceState(
+        {},
+        '',
+        url
+      );
+
+      await window.getMatchesForTeam(
+        team
+      );
 
     }
   );
+
+
 window.getMatchesForTeam = async (team) => {
 
   const snapshot = await getDocs(
