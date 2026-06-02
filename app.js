@@ -649,10 +649,6 @@ document
                 window.location
               );
             
-            url.searchParams.delete(
-              'team'
-            );
-            
             window.history.replaceState(
               {},
               '',
