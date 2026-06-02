@@ -6,6 +6,46 @@ const params =
 const LIVE_LINK =
   params.get('tournament');
 
+
+window.retry = async (
+  fn,
+  attempts = 3,
+  delay = 1000
+) => {
+
+  let lastError;
+
+  for (
+    let i = 0;
+    i < attempts;
+    i++
+  ) {
+
+    try {
+
+      return await fn();
+
+    } catch (e) {
+
+      lastError = e;
+
+      console.warn(
+        `Attempt ${i + 1} failed`
+      );
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            delay
+          )
+      );
+    }
+  }
+
+  throw lastError;
+
+};
 window.renderTournamentPicker =
   async () => {
 
@@ -176,11 +216,6 @@ return false;
   'pageTitle'
 ).textContent =
     window.tournamentInfo.name;
-    
-    document.getElementById(
-  'controls'
-      ).style.display =
-        'block';
     return true;
   };
 
@@ -458,7 +493,15 @@ select.appendChild(
 
 
 window.bigBowlTeams = teams;
+    
+if (!teams.length) {
 
+  throw new Error(
+    'No teams returned'
+  );
+
+}
+    
 const divisionSelect =
   document.getElementById(
     'divisionSelect'
@@ -1305,7 +1348,43 @@ downloadICS(
     generateCalendar
   );
 
+
+document.addEventListener(
+  'visibilitychange',
+  () => {
+
+    if (
+      document.visibilityState ===
+      'visible'
+    ) {
+
+      if (
+        LIVE_LINK &&
+        window.tournamentId &&
+        (
+          !window.bigBowlTeams ||
+          !window.bigBowlTeams.length
+        )
+      ) {
+
+        console.log(
+          'Teams missing after tab resume. Reloading...'
+        );
+
+        location.reload();
+
+      }
+
+    }
+
+  }
+);
+
+
+
 (async () => {
+
+try {
 
   const found =
     await loadTournamentFromLiveLink();
@@ -1313,8 +1392,31 @@ downloadICS(
   if (!found) {
     return;
   }
+  
+document.getElementById(
+  'results'
+).innerHTML = `
+  <div class="empty-state">
 
-  await loadTeams();
+    <div class="spinner"></div>
+
+    <h3>
+      Loading Teams...
+    </h3>
+
+  </div>
+`;
+  
+ await retry(
+  () => loadTeams(),
+  3,
+  1500
+);
+   document.getElementById(
+  'controls'
+      ).style.display =
+        'block';
+  //right place?
 
 document.getElementById(
   'results'
@@ -1340,4 +1442,44 @@ document.getElementById(
   document.getElementById(
   'generateBtn'
 ).style.display = 'none';
+
+} catch (e) {
+
+  console.error(e);
+
+  document.getElementById(
+    'controls'
+  ).style.display =
+    'none';
+
+  document.getElementById(
+    'results'
+  ).innerHTML = `
+    <div class="empty-state">
+
+      <div class="empty-state__icon">
+        ⚠️
+      </div>
+
+      <h3>
+        Failed to load tournament
+      </h3>
+
+      <p>
+        Please refresh the page.
+      </p>
+
+      <button
+        onclick="location.reload()"
+      >
+        Refresh
+      </button>
+
+    </div>
+  `;
+}
+
+})();
+
+
 })();
