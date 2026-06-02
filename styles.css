@@ -402,7 +402,7 @@ h3 {
 }
 
 .toolbar {
-  align-items: flex-end;
+    align-items: end;
 }
 
 #generateBtn {
