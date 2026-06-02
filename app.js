@@ -48,7 +48,17 @@ window.retry = async (
 };
 window.renderTournamentPicker =
   async () => {
+console.log(
+      'renderTournamentPicker starting'
+    );
+ const tournaments =
+      await getUpcomingTournaments();
 
+  console.log(
+      'tournaments loaded:',
+      tournaments.length
+    );
+    
     document.getElementById(
       'results'
     ).innerHTML = `
@@ -63,12 +73,17 @@ window.renderTournamentPicker =
       </div>
     `;
     
-      document.querySelector(
-        '.footer-btn'
-      ).style.display = 'none';
+   const footerBtn =
+  document.querySelector(
+    '.footer-btn'
+  );
+
+if (footerBtn) {
+  footerBtn.style.display =
+    'none';
+}
     
-    const tournaments =
-      await getUpcomingTournaments();
+   
 
     document.getElementById(
       'results'
@@ -161,9 +176,15 @@ if (!LIVE_LINK) {
 ).style.display =
   'none';
   
-document.querySelector(
-  '.footer-btn'
-).style.display = 'inline-flex';
+const footerBtn =
+  document.querySelector(
+    '.footer-btn'
+  );
+
+if (footerBtn) {
+  footerBtn.style.display =
+    'inline-flex';
+}
   
 await renderTournamentPicker();
 return false;
@@ -1386,18 +1407,15 @@ try {
   }
   
 document.getElementById(
-  'results'
-).innerHTML = `
-  <div class="empty-state">
+      'results'
+    ).innerHTML = `
+      <div class="empty-state">
+        <div class="spinner"></div>
+        <h3>Loading Teams...</h3>
+      </div>
+    `;
 
-    <div class="spinner"></div>
-
-    <h3>
-      Loading Teams...
-    </h3>
-
-  </div>
-`;
+  
   
  await retry(
   () => loadTeams(),
@@ -1408,7 +1426,6 @@ document.getElementById(
   'controls'
       ).style.display =
         'block';
-  //right place?
 
 showNoTeamSelected();
   
