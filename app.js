@@ -48,6 +48,25 @@ window.retry = async (
 };
 window.renderTournamentPicker =
   async () => {
+
+document.getElementById(
+      'results'
+    ).innerHTML = `
+      <div class="empty-state">
+
+        <div class="spinner"></div>
+
+        <h3>
+          Loading tournaments...
+        </h3>
+
+        <p>
+          Fetching upcoming tournaments
+        </p>
+
+      </div>
+    `;
+    
 console.log(
       'renderTournamentPicker starting'
     );
@@ -65,20 +84,7 @@ console.log(
     console.log(
   'about to render search UI'
 );
-    
-    document.getElementById(
-      'results'
-    ).innerHTML = `
-      <div class="empty-state">
-
-        <div class="spinner"></div>
-
-        <h3>
-          Loading Tournaments...
-        </h3>
-
-      </div>
-    `;
+  
     
    const footerBtn =
   document.querySelector(
