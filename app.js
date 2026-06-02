@@ -283,6 +283,37 @@ window.testFirestore = async () => {
 
 };
 
+window.showNoTeamSelected = () => {
+
+  document.getElementById(
+    'results'
+  ).innerHTML = `
+    <div class="empty-state">
+
+      <div class="empty-state__icon">
+        👥
+      </div>
+
+      <h3>
+        No Team Selected
+      </h3>
+
+      <p>
+        Select a team from the dropdown above
+        to view their schedule and export a
+        calendar.
+      </p>
+
+    </div>
+  `;
+  
+    document.getElementById('generateBtn').style.display = 'none';
+
+        //  const generateButton = document.getElementById('generateBtn'); 
+        //  generateButton.disabled = true;
+        // generateButton.textContent ='Generate Calendar';
+};
+
 window.getUpcomingTournaments =
   async () => {
 
@@ -333,21 +364,12 @@ window.getUpcomingTournaments =
           (a, b) =>
             a.date - b.date
         );
-
- //   console.log(
-  //    'upcoming tournaments:',
-  //    tournaments.length
-  //  );
-
     return tournaments;
 
   };
-
-
 window.testBigBowl = async () => {
 
   try {
-
     const snapshot = await getDoc(
       doc(
         db,
@@ -355,7 +377,6 @@ window.testBigBowl = async () => {
         '6IXXjNnmPXwgWw6GXNPS'
       )
     );
-
   } catch (e) {
     console.error(e);
   }
@@ -395,6 +416,8 @@ window.getMatches = async (tournamentId) => {
   return matches;
 
 };
+
+
 
 window.findTeam = async (tournamentId, teamName) => {
 
@@ -576,25 +599,8 @@ document
           window.selectedTeam = null;
           window.currentTeam = null;
         
-          document.getElementById(
-            'results'
-          ).innerHTML = '';
-  
-        document.getElementById(
-  'generateBtn'
-).style.display = 'none';
-          
-          const generateButton =
-            document.getElementById(
-              'generateBtn'
-            );
-        
-          generateButton.disabled =
-            true;
-        
-          generateButton.textContent =
-            'Generate Calendar';
-        
+          showNoTeamSelected();
+    
         }
         
         window.currentDivision =
@@ -609,21 +615,7 @@ document
           window.selectedTeam = null;
           window.currentTeam = null;
           
-          // Clear rendered results
-          document.getElementById(
-            'results'
-          ).innerHTML = '';
-          
-          // Reset calendar button
-          document.getElementById(
-            'generateBtn'
-          ).disabled = true;
-          
-          document.getElementById(
-            'generateBtn'
-          ).textContent =
-            'Generate Calendar';
-    
+          showNoTeamSelected();
 
       teamSelect.disabled = false;
 
@@ -1418,36 +1410,13 @@ document.getElementById(
         'block';
   //right place?
 
-document.getElementById(
-  'results'
-).innerHTML = `
-  <div class="empty-state">
-
-    <div class="empty-state__icon">
-      👥
-    </div>
-
-    <h3>
-      No Team Selected
-    </h3>
-
-    <p>
-      Select a team from the dropdown above
-      to view their schedule and export a
-      calendar.
-    </p>
-
-  </div>
-`;
-  document.getElementById(
-  'generateBtn'
-).style.display = 'none';
-
+showNoTeamSelected();
+  
 } catch (e) {
 
   console.error(e);
 
-  document.getElementById(
+   document.getElementById(
     'controls'
   ).style.display =
     'none';
