@@ -58,6 +58,13 @@ console.log(
       'tournaments loaded:',
       tournaments.length
     );
+    console.log(
+  'results element:',
+  document.getElementById('results')
+);
+    console.log(
+  'about to render search UI'
+);
     
     document.getElementById(
       'results'
