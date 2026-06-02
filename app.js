@@ -592,14 +592,16 @@ divisions.forEach(
 
   }
 );
-  } catch (error) {
+ } catch (error) {
 
-    console.error(
-      'loadTeams failed',
-      error
-    );
+  console.error(
+    'loadTeams failed',
+    error
+  );
 
-  }
+  throw error;
+
+}
 
 divisionSelect.dispatchEvent(
   new Event('change')
@@ -1343,9 +1345,7 @@ END:VEVENT
 
 ics += `END:VCALENDAR`;
   
-//console.log(ics);
 window.lastICS = ics;
-//console.log(JSON.stringify(ics));
 
   
   const filename =
@@ -1421,7 +1421,25 @@ document.getElementById(
       </div>
     `;
 
-  
+ (async () => {
+
+  try {
+
+    const found =
+      await loadTournamentFromLiveLink();
+
+    if (!found) {
+      return;
+    }
+
+    document.getElementById(
+      'results'
+    ).innerHTML = `
+      <div class="empty-state">
+        <div class="spinner"></div>
+        <h3>Loading Teams...</h3>
+      </div>
+    `; 
   
  await retry(
   () => loadTeams(),
@@ -1450,7 +1468,7 @@ if (TEAM_ID) {
       new Event('change')
     );
 
-      const teamSelect =
+    const teamSelect =
       document.getElementById(
         'teamSelect'
       );
@@ -1464,9 +1482,14 @@ if (TEAM_ID) {
 
     return;
   }
-  
 }
-  
+
+showNoTeamSelected();
+
+  } catch (e) {
+
+        console.error(e);
+
   document.getElementById(
     'results'
   ).innerHTML = `
