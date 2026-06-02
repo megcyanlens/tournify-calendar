@@ -1401,25 +1401,6 @@ document.addEventListener(
 
 
 
-(async () => {
-
-try {
-
-  const found =
-    await loadTournamentFromLiveLink();
-
-  if (!found) {
-    return;
-  }
-  
-document.getElementById(
-      'results'
-    ).innerHTML = `
-      <div class="empty-state">
-        <div class="spinner"></div>
-        <h3>Loading Teams...</h3>
-      </div>
-    `;
 
  (async () => {
 
