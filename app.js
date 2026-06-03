@@ -1115,8 +1115,8 @@ html += `
       </div>
 
      <div class="team-country">
-      ${flag}
-      </div>
+          ${flag || countryCode || ''}
+        </div>
 
     </div>
 
