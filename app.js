@@ -1589,11 +1589,22 @@ pdf.text(
   15,
   y
 );
+const descriptionHtml =
+  window.tournamentInfo.description ||
+  '';
+
+const temp =
+  document.createElement('div');
+
+temp.innerHTML =
+  descriptionHtml;
+
 const description =
-  window.tournamentInfo.description || '';
+  temp.textContent ||
+  temp.innerText ||
+  '';
 
 if (description) {
-
   y += 10;
 
   pdf.setFontSize(11);
@@ -1615,7 +1626,33 @@ if (description) {
     wrappedDescription.length * 5 +
     5;
 }
+pdf.setFont(undefined, 'bold');
+pdf.text('Tournify:', 15, y);
+pdf.setTextColor(...tournamentRgb);
+pdf.setFont(undefined, 'normal');
+pdf.textWithLink(
+  tournamentUrl,
+  15,
+  y,
+  {
+    url: tournamentUrl
+  }
+);
 
+const urlWidth =
+  pdf.getTextWidth(
+    tournamentUrl
+  );
+
+pdf.line(
+  15,
+  y + 1,
+  15 + urlWidth,
+  y + 1
+);
+
+pdf.setTextColor(0,0,0);
+  
 pdf.setFontSize(11);
 
 pdf.setFont(undefined, 'bold');
@@ -1641,24 +1678,19 @@ pdf.textWithLink(
   }
 );
 
+const locationWidth =
+  pdf.getTextWidth(location);
+
+pdf.line(
+  40,
+  y + 1,
+  40 + locationWidth,
+  y + 1
+);
+  
 y += 8;
 pdf.setTextColor(0, 0, 0);
-pdf.setFont(undefined, 'bold');
-pdf.text('Tournify:', 15, y);
-pdf.setTextColor(...tournamentRgb);
-pdf.setFont(undefined, 'normal');
-pdf.textWithLink(
-  'Open Tournify page',
-  40,
-  y,
-  {
-    url: tournamentUrl
-  }
-);
 
-y += 15;
-  
-pdf.setTextColor(0, 0, 0);
 pdf.setFontSize(16);
 pdf.setFont(undefined, 'bold');
 
