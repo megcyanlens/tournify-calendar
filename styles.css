@@ -52,10 +52,10 @@ body {
 
 .toolbar {
   margin-top: 24px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 300px 300px 1fr;
   gap: 20px;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  align-items: end;
 }
 
 .field-group {
@@ -85,6 +85,12 @@ select {
 .button-group {
   display: flex;
   gap: 12px;
+  justify-content: flex-end;
+}
+
+#generateBtn,
+#pdfBtn {
+  min-width: 220px;
 }
 
 #generateBtn {
@@ -394,11 +400,9 @@ h3 {
 @media (max-width: 1150px) {
 
   .toolbar {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: 1fr;
   }
 
-  .toolbar .actions,
   .button-group {
     width: 100%;
   }
@@ -406,6 +410,7 @@ h3 {
   #generateBtn,
   #pdfBtn {
     flex: 1;
+    min-width: 0;
   }
 
 }
