@@ -455,12 +455,15 @@ window.renderTournamentInfo = () => {
           </div>
 
           <div class="tournament-info-value">
-            ${window.tournamentInfo.place || '-'}
-            ${
-              window.tournamentInfo.placeSecondaryName
-                ? `<br>${window.tournamentInfo.placeSecondaryName}`
-                : ''
-            }
+           <a
+                href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  window.tournamentInfo.place || ''
+                )}"
+                target="_blank"
+                class="tournament-info-link"
+              >
+                ${window.tournamentInfo.place || '-'}
+              </a>
           </div>
 
         </div>
@@ -495,7 +498,7 @@ window.renderTournamentInfo = () => {
               target="_blank"
               class="tournament-info-link"
             >
-              View Tournament →
+              Open in Tournify 🡕
             </a>
 
           </div>
