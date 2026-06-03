@@ -426,35 +426,48 @@ window.testBigBowl = async () => {
   }
 
 };
+window.getTournamentLocationInfo = () => {
 
-window.renderTournamentInfo = () => {
+  const override =
+    getTournamentOverride();
 
-  if (!window.tournamentInfo) {
-    return;
-  }
+  return {
 
-  const card =
-    document.getElementById(
-      'tournamentInfoCard'
-    );
+    location:
+      override.location ||
+      `${window.tournamentInfo.place}${
+        window.tournamentInfo.placeSecondaryName
+          ? `, ${window.tournamentInfo.placeSecondaryName}`
+          : ''
+      }`,
+
+    mapsUrl:
+      override.mapsUrl ||
+      `https://www.google.com/maps/place/?q=place_id:${window.tournamentInfo.placeReference}`
+
+  };
+
+};
+window.getTournamentDates = () => {
 
   const startDate =
     new Date(
       window.tournamentInfo.date * 1000
     );
 
-const endDate =
-  new Date(startDate);
+  const endDate =
+    new Date(startDate);
 
-endDate.setDate(
-  endDate.getDate() +
-  (
-    Number(
-      window.tournamentInfo.numMatchDays || 1
-    ) - 1
-  )
-);
-const dateText =
+  endDate.setDate(
+    endDate.getDate() +
+    (
+      Number(
+        window.tournamentInfo.numMatchDays || 1
+      ) - 1
+    )
+  );
+  
+  const dateText =
   startDate.getTime() === endDate.getTime()
     ? startDate.toLocaleDateString(
         'en-GB',
@@ -479,15 +492,25 @@ const dateText =
           year: 'numeric'
         }
       )}`;
+  
+  return {startDate,endDate, dateText};
 
-  const override =getTournamentOverride();
+};
 
-const location =
-  override.location ||
-  `${window.tournamentInfo.place}${window.tournamentInfo.placeSecondaryName? `, ${window.tournamentInfo.placeSecondaryName}`: ''
-  }`;
+window.renderTournamentInfo = () => {
 
-const mapsUrl =override.mapsUrl || `https://www.google.com/maps/place/?q=place_id:${window.tournamentInfo.placeReference}`;
+  if (!window.tournamentInfo) {
+    return;
+  }
+
+  
+  const card =
+    document.getElementById(
+      'tournamentInfoCard'
+    );
+
+  const {startDate,endDate,dateText} = getTournamentDates();
+const {location,mapsUrl} = getTournamentLocationInfo();
 
   card.innerHTML = `
   <div class="tournament-info-card">
@@ -609,34 +632,6 @@ window.findTeam = async (tournamentId, teamName) => {
   return teams.find(
     t => t.name === teamName
   );
-
-};
-
-window.findLondonFireMatches = async () => {
-
-  const snapshot = await getDocs(
-    collection(
-      db,
-      'tournaments',
-      '6IXXjNnmPXwgWw6GXNPS',
-      'matches'
-    )
-  );
-
-  const matches =
-    snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-
-  const fireMatches =
-    matches.filter(match =>
-      match.team1 === 2 ||
-      match.team2 === 2 ||
-      match.referee === 'yoDaAzO0m8ZU0TF1565J'
-    );
-
-  return fireMatches;
 
 };
 
@@ -935,7 +930,6 @@ const teamMatches = [
   ...refereeMatches
 ];
 
-  //console.log('team', team.name);
 
   window.selectedTeam = team;
   
@@ -1005,16 +999,6 @@ const playedMatches =
       match.day,
       match.st
     ) <= now
-  );
-
-const saturdayMatches =
-  matches.filter(
-    m => Number(m.day) === 0
-  );
-
-const sundayMatches =
-  matches.filter(
-    m => Number(m.day) === 1
   );
   
 const latestMatch =
@@ -1438,6 +1422,7 @@ if (!window.selectedTeam) {
   alert('Select a team first');
   return;
 }
+  const {location,mapsUrl} = getTournamentLocationInfo();
   
 const now = new Date();
 
@@ -1574,16 +1559,8 @@ window.generatePDF = async () => {
 
   const pdf = new jsPDF();
 
-  const startDate = new Date(
-    window.tournamentInfo.date * 1000
-  );
-
-  const endDate = new Date(
-    startDate.getTime() +
-    (
-      (window.tournamentInfo.numMatchDays || 1) - 1
-    ) * 24 * 60 * 60 * 1000
-  );
+  const {startDate,endDate} = getTournamentDates();
+  const {location,mapsUrl} = getTournamentLocationInfo();
 
   const tournamentUrl =
     `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}`;
@@ -1614,7 +1591,7 @@ window.generatePDF = async () => {
   y += 8;
 
   pdf.text(
-    `${window.tournamentInfo.place}, ${window.tournamentInfo.placeSecondaryName || ''}`,
+    location,
     15,
     y
   );
