@@ -2,6 +2,14 @@ const params =
   new URLSearchParams(
     window.location.search
   );
+function getTournamentOverride() {
+
+  return (
+    window.TOURNAMENT_OVERRIDES?.[
+      window.tournamentInfo?.liveLink
+    ] || {}
+  );
+}
 
 const LIVE_LINK =
   params.get('tournament');
@@ -471,8 +479,16 @@ const dateText =
           year: 'numeric'
         }
       )}`;
-  console.log(dateText);
-  
+
+  const override =getTournamentOverride();
+
+const location =
+  override.location ||
+  `${window.tournamentInfo.place}${window.tournamentInfo.placeSecondaryName? `, ${window.tournamentInfo.placeSecondaryName}`: ''
+  }`;
+
+const mapsUrl =override.mapsUrl || `https://www.google.com/maps/place/?q=place_id:${window.tournamentInfo.placeReference}`;
+
   card.innerHTML = `
   <div class="tournament-info-card">
 
@@ -487,16 +503,12 @@ const dateText =
         <div class="tournament-info-value">
 
           <a
-          href="https://www.google.com/maps/place/?q=place_id:${window.tournamentInfo.placeReference}"
-            target="_blank"
-            class="tournament-info-link"
-          >
-            ${window.tournamentInfo.place}
-              ${window.tournamentInfo.placeSecondaryName
-                ? `, ${window.tournamentInfo.placeSecondaryName}`
-                : ''}
+              href="${mapsUrl}"
+              target="_blank"
+              class="tournament-info-link"
+            >
+              ${location}
             </a>
-
         </div>
 
       </div>
@@ -1497,15 +1509,42 @@ CALSCALE:GREGORIAN
       event.type === 'PLAYING'
         ? `${team1} vs ${team2}`
         : `Referee: ${team1} vs ${team2}`;
+    const refereeTeam =
+  
+      window.bigBowlTeams.find(
+      t => t.id === event.referee
+      );
 
+    const refereeName =
+      refereeTeam
+        ? refereeTeam.name
+        : 'Unknown';
+
+const description = [
+  `${fieldName}`,
+  `${team1} vs ${team2}`,
+  `Refereeing team: ${refereeName}`
+    ].join('\\n');
+
+    
+  const description = [
+  `${fieldName}`,
+  `${title}`,
+  event.type === 'REFEREE'
+    ? `Refereeing: ${team1} vs ${team2}`
+    : ''
+]
+.filter(Boolean)
+.join('\\n');
+    
 ics += `BEGIN:VEVENT
 UID:${crypto.randomUUID()}
 DTSTAMP:${formatICSDate(new Date())}
 DTSTART:${startUtc}
 DTEND:${endUtc}
 SUMMARY:${title}
-DESCRIPTION:${title}
-LOCATION:${fieldName}, ${window.tournamentInfo.place}, ${window.tournamentInfo.placeSecondaryName}
+DESCRIPTION:${description}
+LOCATION: ${location}
 END:VEVENT
 `;
 
@@ -1528,12 +1567,7 @@ downloadICS(
 };
 
 
-    document
-  .getElementById('generateBtn')
-  .addEventListener(
-    'click',
-    generateCalendar
-  );
+    document.getElementById('generateBtn').addEventListener('click',generateCalendar);
 
 
 document.addEventListener(
