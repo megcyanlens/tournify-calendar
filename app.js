@@ -355,7 +355,9 @@ window.showNoTeamSelected = () => {
   `;
   
     document.getElementById('generateBtn').style.display = 'none';
-    document.getElementById('pdfBtn').style.display = 'none';};
+    document.getElementById('pdfBtn').style.display = 'none';
+
+};
 
 window.getUpcomingTournaments =
   async () => {
@@ -1648,7 +1650,7 @@ pdf.text(
 y +=
   wrappedDescription.length * 5 +
   5;
-
+}
 // Tournify URL
 pdf.setTextColor(
   ...tournamentRgb
