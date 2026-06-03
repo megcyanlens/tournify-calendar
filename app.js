@@ -1562,8 +1562,16 @@ window.generatePDF = async () => {
       )
     : '';
 
-  const tournamentUrl =
-    `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}`;
+  const tournamentColor =window.tournamentInfo.color || '#0b2d69';
+  const hex =tournamentColor.replace('#', '');
+
+const headerColor = [
+  parseInt(hex.substring(0, 2), 16),
+  parseInt(hex.substring(2, 4), 16),
+  parseInt(hex.substring(4, 6), 16)
+];
+  
+  const tournamentUrl =`https://tournifyapp.com/live/${window.tournamentInfo.liveLink}`;
 
   const shareUrl =
     `${window.location.origin}` +
@@ -1581,7 +1589,32 @@ pdf.text(
   15,
   y
 );
+const description =
+  window.tournamentInfo.description || '';
 
+if (description) {
+
+  y += 10;
+
+  pdf.setFontSize(11);
+  pdf.setFont(undefined, 'normal');
+
+  const wrappedDescription =
+    pdf.splitTextToSize(
+      description,
+      180
+    );
+
+  pdf.text(
+    wrappedDescription,
+    15,
+    y
+  );
+
+  y +=
+    wrappedDescription.length * 5 +
+    5;
+}
 y += 12;
 
 pdf.setFontSize(11);
@@ -1598,6 +1631,8 @@ pdf.setFont(undefined, 'bold');
 pdf.text('Location:', 15, y);
 
 pdf.setFont(undefined, 'normal');
+  pdf.setTextColor(0, 102, 204);
+
 pdf.textWithLink(
   location,
   40,
@@ -1611,10 +1646,10 @@ y += 8;
 
 pdf.setFont(undefined, 'bold');
 pdf.text('Tournify:', 15, y);
-
+pdf.setTextColor(0, 102, 204);
 pdf.setFont(undefined, 'normal');
 pdf.textWithLink(
-  'Open Tournament',
+  'Open Tournify page',
   40,
   y,
   {
@@ -1747,31 +1782,31 @@ Object.entries(dayGroups)
         'Field',
         'Match'
       ]],
+      headStyles: {
+    fillColor: headerColor,
+    textColor: 255,
+    fontStyle: 'bold'
+  },
 
       body: events.map(
-        event => [
-
-          event.st,
-
-          event.type,
-
-          window.tournamentFields[
-            event.field
-          ]?.name || event.field,
-
-          `${getTeamName(
-            event.poule,
-            event.team1
-          )} vs ${getTeamName(
-            event.poule,
-            event.team2
-          )}`
-
-        ]
-      )
-
-    });
-
+          event => [
+            event.st,
+            event.type,
+            window.tournamentFields[
+              event.field
+            ]?.name || event.field,
+            `${getTeamName(
+              event.poule,
+              event.team1
+            )} vs ${getTeamName(
+              event.poule,
+              event.team2
+            )}`
+          ]
+        )
+      
+      });
+    
     y =
       pdf.lastAutoTable.finalY +
       10;
