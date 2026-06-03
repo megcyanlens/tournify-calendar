@@ -1131,7 +1131,7 @@ html += `
       </div>
 
       <div class="stat-label">
-        Upcoming
+        Playing
       </div>
 
     </div>
@@ -1158,7 +1158,7 @@ html += `
       </div>
 
       <div class="stat-label">
-        Total
+        Total upcoming
       </div>
 
     </div>
