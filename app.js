@@ -443,72 +443,96 @@ window.renderTournamentInfo = () => {
       ) * 1000
     );
 
+  
   card.innerHTML = `
-    <div class="tournament-info-card">
+  <div class="tournament-info-card">
 
-      <div class="tournament-info-grid">
+    <div class="tournament-info-grid">
 
-        <div>
+      <div>
 
-          <div class="tournament-info-label">
-            Location
-          </div>
+        <div class="tournament-info-label">
+          Location
+        </div>
 
-          <div class="tournament-info-value">
-           <a
-                href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  window.tournamentInfo.place || ''
-                )}"
-                target="_blank"
-                class="tournament-info-link"
-              >
-                ${window.tournamentInfo.place || '-'}
-              </a>
-          </div>
+        <div class="tournament-info-value">
+
+          <a
+            href="https://www.google.com/maps/search/?api=1&query_place_id=${window.tournamentInfo.placeReference}"
+            target="_blank"
+            class="tournament-info-link"
+          >
+            ${[
+              window.tournamentInfo.place,
+              window.tournamentInfo.placeSecondaryName
+            ]
+              .filter(Boolean)
+              .join(', ')}
+          </a>
 
         </div>
 
-        <div>
+      </div>
 
-          <div class="tournament-info-label">
-            Dates
-          </div>
+      <div>
 
-          <div class="tournament-info-value">
-            ${startDate.toLocaleDateString()}
-            ${
-              endDate.getTime() !== startDate.getTime()
-                ? ` - ${endDate.toLocaleDateString()}`
-                : ''
+        <div class="tournament-info-label">
+          Dates
+        </div>
+
+        <div class="tournament-info-value">
+
+          ${startDate.toLocaleDateString(
+            'en-GB',
+            {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'short'
             }
-          </div>
+          )}
+
+          ${
+            startDate.getTime() !== endDate.getTime()
+              ? ` - ${endDate.toLocaleDateString(
+                  'en-GB',
+                  {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short'
+                  }
+                )}`
+              : ''
+          }
 
         </div>
 
-        <div>
+      </div>
 
-          <div class="tournament-info-label">
-            Tournify
-          </div>
+      <div>
 
-          <div class="tournament-info-value">
+        <div class="tournament-info-label">
+          Tournify
+        </div>
 
-            <a
-              href="https://tournifyapp.com/live/${window.tournamentInfo.liveLink}"
-              target="_blank"
-              class="tournament-info-link"
-            >
-              Open in Tournify 🡕
-            </a>
+        <div class="tournament-info-value">
 
-          </div>
+          <a
+            href="https://tournifyapp.com/live/${window.tournamentInfo.liveLink}"
+            target="_blank"
+            class="tournament-info-link"
+          >
+            Open in Tournify ↗
+          </a>
 
         </div>
 
       </div>
 
     </div>
-  `;
+
+  </div>
+`;
+ 
 };
 
 
