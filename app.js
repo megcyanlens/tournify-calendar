@@ -503,6 +503,7 @@ window.renderTournamentInfo = () => {
 
 const {startDate,endDate,dateText} = getTournamentDates();
 const {location,mapsUrl} = getTournamentLocationInfo();
+  
   const tournifyUrl = window.selectedTeam
   ? `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}/team/${window.selectedTeam.id}`
   : `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}`;
@@ -927,6 +928,7 @@ const teamMatches = [
 
 
   window.selectedTeam = team;
+ renderTournamentInfo();
   
   document.getElementById('generateBtn').style.display = 'block';
   document.getElementById('pdfBtn').style.display = 'block';
