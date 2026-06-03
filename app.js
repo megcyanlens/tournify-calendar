@@ -1527,16 +1527,6 @@ const description = [
     ].join('\\n');
 
     
-  const description = [
-  `${fieldName}`,
-  `${title}`,
-  event.type === 'REFEREE'
-    ? `Refereeing: ${team1} vs ${team2}`
-    : ''
-]
-.filter(Boolean)
-.join('\\n');
-    
 ics += `BEGIN:VEVENT
 UID:${crypto.randomUUID()}
 DTSTAMP:${formatICSDate(new Date())}
