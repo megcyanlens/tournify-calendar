@@ -939,9 +939,7 @@ const teamMatches = [
 
   window.selectedTeam = team;
   
-  document.getElementById(
-  'generateBtn'
-).style.display = 'block';
+  document.getElementById('generateBtn').style.display = 'block';
 
   renderMatches(
   team,
@@ -1009,6 +1007,16 @@ const playedMatches =
     ) <= now
   );
 
+const saturdayMatches =
+  matches.filter(
+    m => Number(m.day) === 0
+  );
+
+const sundayMatches =
+  matches.filter(
+    m => Number(m.day) === 1
+  );
+  
 const latestMatch =
   playingMatches.reduce(
     (latest, match) => {
@@ -1557,7 +1565,8 @@ downloadICS(
 };
 
 
-    document.getElementById('generateBtn').addEventListener('click',generateCalendar);
+document.getElementById('generateBtn').addEventListener('click',generateCalendar);
+document.getElementById('pdfBtn').addEventListener('click',generatePDF);
 
 
 document.addEventListener(
