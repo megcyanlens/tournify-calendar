@@ -471,7 +471,7 @@ const dateText =
           year: 'numeric'
         }
       )}`;
-  
+  console.log(dateText);
   
   card.innerHTML = `
   <div class="tournament-info-card">
