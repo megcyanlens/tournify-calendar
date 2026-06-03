@@ -355,8 +355,7 @@ window.showNoTeamSelected = () => {
   `;
   
     document.getElementById('generateBtn').style.display = 'none';
-
-};
+    document.getElementById('pdfBtn').style.display = 'none';};
 
 window.getUpcomingTournaments =
   async () => {
@@ -925,6 +924,7 @@ const teamMatches = [
   window.selectedTeam = team;
   
   document.getElementById('generateBtn').style.display = 'block';
+  document.getElementById('pdfBtn').style.display = 'block';
 
   renderMatches(
   team,
