@@ -435,14 +435,43 @@ window.renderTournamentInfo = () => {
       window.tournamentInfo.date * 1000
     );
 
-  const endDate =
-    new Date(
-      (
-        window.tournamentInfo.endDate ||
-        window.tournamentInfo.date
-      ) * 1000
-    );
+const endDate =
+  new Date(startDate);
 
+endDate.setDate(
+  endDate.getDate() +
+  (
+    Number(
+      window.tournamentInfo.numMatchDays || 1
+    ) - 1
+  )
+);
+const dateText =
+  startDate.getTime() === endDate.getTime()
+    ? startDate.toLocaleDateString(
+        'en-GB',
+        {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }
+      )
+    : `${startDate.toLocaleDateString(
+        'en-GB',
+        {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }
+      )} - ${endDate.toLocaleDateString(
+        'en-GB',
+        {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }
+      )}`;
+  
   
   card.innerHTML = `
   <div class="tournament-info-card">
@@ -458,7 +487,7 @@ window.renderTournamentInfo = () => {
         <div class="tournament-info-value">
 
           <a
-            href="https://www.google.com/maps/search/?api=1&query_place_id=${window.tournamentInfo.placeReference}"
+            href="https://www.google.com/maps/place/?q=place_id:${window.tournamentInfo.placeReference}"
             target="_blank"
             class="tournament-info-link"
           >
@@ -481,29 +510,7 @@ window.renderTournamentInfo = () => {
         </div>
 
         <div class="tournament-info-value">
-
-          ${startDate.toLocaleDateString(
-            'en-GB',
-            {
-              weekday: 'short',
-              day: 'numeric',
-              month: 'short'
-            }
-          )}
-
-          ${
-            startDate.getTime() !== endDate.getTime()
-              ? ` - ${endDate.toLocaleDateString(
-                  'en-GB',
-                  {
-                    weekday: 'short',
-                    day: 'numeric',
-                    month: 'short'
-                  }
-                )}`
-              : ''
-          }
-
+          ${dateText}
         </div>
 
       </div>
