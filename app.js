@@ -502,10 +502,6 @@ window.renderTournamentInfo = () => {
 
   const {startDate,endDate,dateText} = getTournamentDates();
 const {location,mapsUrl} = getTournamentLocationInfo();
-const divisionName =
-  window.divisionNames?.[
-    window.selectedTeam.division
-  ] || window.selectedTeam.division;
   
   card.innerHTML = `
   <div class="tournament-info-card">
@@ -1556,6 +1552,15 @@ window.generatePDF = async () => {
 
   const {dateText} = getTournamentDates();
   const {location,mapsUrl} = getTournamentLocationInfo();
+  const divisionName =
+  window.selectedTeam
+    ? (
+        window.divisionNames?.[
+          window.selectedTeam.division
+        ] ||
+        window.selectedTeam.division
+      )
+    : '';
 
   const tournamentUrl =
     `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}`;
