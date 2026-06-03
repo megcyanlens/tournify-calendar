@@ -194,6 +194,10 @@ if (footerBtn) {
   footerBtn.style.display =
     'inline-flex';
 }
+
+document.getElementById(
+  'tournamentInfoCard'
+).innerHTML = '';
   
 await renderTournamentPicker();
 return false;
@@ -221,6 +225,8 @@ return false;
         ).style.display =
           'none';
 
+    document.getElementById('tournamentInfoCard').innerHTML = '';
+      
     await renderTournamentPicker();
     return false;
         }
@@ -233,12 +239,15 @@ return false;
 
     window.tournamentInfo =
       tournamentDoc.data();
+
     
     document.documentElement.style.setProperty(
       '--tournament-color',
       window.tournamentInfo.color || '#0b2d69'
     );
     
+      renderTournamentInfo();
+
     window.tournamentFields =
       window.tournamentInfo.fields;
 
@@ -409,6 +418,97 @@ window.testBigBowl = async () => {
   }
 
 };
+
+window.renderTournamentInfo = () => {
+
+  if (!window.tournamentInfo) {
+    return;
+  }
+
+  const card =
+    document.getElementById(
+      'tournamentInfoCard'
+    );
+
+  const startDate =
+    new Date(
+      window.tournamentInfo.date * 1000
+    );
+
+  const endDate =
+    new Date(
+      (
+        window.tournamentInfo.endDate ||
+        window.tournamentInfo.date
+      ) * 1000
+    );
+
+  card.innerHTML = `
+    <div class="tournament-info-card">
+
+      <div class="tournament-info-grid">
+
+        <div>
+
+          <div class="tournament-info-label">
+            Location
+          </div>
+
+          <div class="tournament-info-value">
+            ${window.tournamentInfo.place || '-'}
+            ${
+              window.tournamentInfo.placeSecondaryName
+                ? `<br>${window.tournamentInfo.placeSecondaryName}`
+                : ''
+            }
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="tournament-info-label">
+            Dates
+          </div>
+
+          <div class="tournament-info-value">
+            ${startDate.toLocaleDateString()}
+            ${
+              endDate.getTime() !== startDate.getTime()
+                ? ` - ${endDate.toLocaleDateString()}`
+                : ''
+            }
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="tournament-info-label">
+            Tournify
+          </div>
+
+          <div class="tournament-info-value">
+
+            <a
+              href="https://tournifyapp.com/live/${window.tournamentInfo.liveLink}"
+              target="_blank"
+              class="tournament-info-link"
+            >
+              View Tournament →
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+};
+
+
 window.getTeams = async (tournamentId) => {
 
   const snapshot = await getDocs(
