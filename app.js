@@ -1979,8 +1979,10 @@ pdf.text(
 };
 
 document.getElementById('generateBtn').addEventListener('click',generateCalendar);
-document.getElementById('pdfBtn').addEventListener('click',generatePDF);
+document.getElementById('generateBtn').style.display = 'none';
 
+document.getElementById('pdfBtn').addEventListener('click',generatePDF);
+document.getElementById('pdfBtn').style.display = 'none';
 
 document.addEventListener(
   'visibilitychange',
