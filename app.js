@@ -1614,23 +1614,40 @@ const description =
   
 // Description
 if (description) {
+pdf.setFont(
+  undefined,
+  'bold'
+);
 
-  const wrappedDescription =
-    pdf.splitTextToSize(
-      description,
-      180
-    );
+pdf.text(
+  'Tournify Description:',
+  15,
+  y
+);
 
-  pdf.text(
-    wrappedDescription,
-    15,
-    y
+y += 7;
+
+pdf.setFont(
+  undefined,
+  'normal'
+);
+
+const wrappedDescription =
+  pdf.splitTextToSize(
+    description,
+    180
   );
 
-  y +=
-    wrappedDescription.length * 5 +
-    10;
-}
+pdf.text(
+  wrappedDescription,
+  15,
+  y
+);
+
+// smaller gap after description
+y +=
+  wrappedDescription.length * 5 +
+  5;
 
 // Tournify URL
 pdf.setTextColor(
@@ -1652,7 +1669,7 @@ pdf.setTextColor(
   0
 );
 
-y += 10;
+y += 15;
 
 // Dates
 pdf.setFont(
