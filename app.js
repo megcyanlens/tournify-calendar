@@ -500,7 +500,7 @@ window.renderTournamentInfo = () => {
       'tournamentInfoCard'
     );
 
-  const {startDate,endDate,dateText} = getTournamentDates();
+const {startDate,endDate,dateText} = getTournamentDates();
 const {location,mapsUrl} = getTournamentLocationInfo();
   
   card.innerHTML = `
