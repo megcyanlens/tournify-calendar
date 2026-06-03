@@ -1172,6 +1172,7 @@ html += `
 
   html += `
     <h3>Upcoming Games</h3>
+<div class="table-wrapper">
 
     <table border="1" cellpadding="6">
       <tr>
@@ -1180,6 +1181,7 @@ html += `
         <th>Team 1</th>
         <th>Team 2</th>
       </tr>
+      </div>
   `;
 
   upcomingMatches.forEach(match => {
@@ -1222,6 +1224,7 @@ html += `
 
     html += `
 <h3>Played Games</h3>
+<div class="table-wrapper">
     <table border="1" cellpadding="6">
       <tr>
         <th>Time</th>
@@ -1229,6 +1232,7 @@ html += `
         <th>Team 1</th>
         <th>Team 2</th>
       </tr>
+      </div>
   `;
 
   playedMatches.forEach(match => {
