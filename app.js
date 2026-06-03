@@ -1079,16 +1079,22 @@ if (eventIsOver) {
     team.division
   ] || team.division;
 
-const flag =
+const countryCode =
   (team.country || '')
-    .toUpperCase()
-    .replace(
-      /./g,
-      char =>
-        String.fromCodePoint(
-          127397 + char.charCodeAt()
+    .trim()
+    .toUpperCase();
+
+const flag =
+  /^[A-Z]{2}$/.test(countryCode)
+    ? [...countryCode]
+        .map(
+          c =>
+            String.fromCodePoint(
+              127397 + c.charCodeAt()
+            )
         )
-    );
+        .join('')
+    : '';
 
 
 html += `
