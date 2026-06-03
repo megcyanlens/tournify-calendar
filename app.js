@@ -1563,7 +1563,340 @@ downloadICS(
 );
 
 };
+window.generatePDF = async () => {
 
+  if (!window.selectedTeam) {
+    alert('Select a team first');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+
+  const pdf = new jsPDF();
+
+  const startDate = new Date(
+    window.tournamentInfo.date * 1000
+  );
+
+  const endDate = new Date(
+    startDate.getTime() +
+    (
+      (window.tournamentInfo.numMatchDays || 1) - 1
+    ) * 24 * 60 * 60 * 1000
+  );
+
+  const tournamentUrl =
+    `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}`;
+
+  const shareUrl =
+    `${window.location.origin}` +
+    `?tournament=${window.tournamentInfo.liveLink}` +
+    `&team=${window.selectedTeam.id}`;
+
+  let y = 20;
+
+  pdf.setFontSize(22);
+  pdf.text(
+    window.tournamentInfo.name,
+    15,
+    y
+  );
+
+  y += 10;
+
+  pdf.setFontSize(11);
+  pdf.text(
+    `${startDate.toLocaleDateString('en-GB')} - ${endDate.toLocaleDateString('en-GB')}`,
+    15,
+    y
+  );
+
+  y += 8;
+
+  pdf.text(
+    `${window.tournamentInfo.place}, ${window.tournamentInfo.placeSecondaryName || ''}`,
+    15,
+    y
+  );
+
+  y += 8;
+
+  pdf.text(
+    tournamentUrl,
+    15,
+    y
+  );
+
+  y += 15;
+
+  pdf.setFontSize(16);
+  pdf.text(
+    'Team Information',
+    15,
+    y
+  );
+
+  y += 10;
+
+  pdf.setFontSize(11);
+
+  pdf.text(
+    `Team: ${window.selectedTeam.name}`,
+    15,
+    y
+  );
+
+  y += 7;
+
+  pdf.text(
+    `Division: ${
+      window.divisionNames?.[
+        window.selectedTeam.division
+      ] || window.selectedTeam.division
+    }`,
+    15,
+    y
+  );
+
+  y += 15;
+
+  pdf.setFontSize(16);
+  pdf.text(
+    'Upcoming Games',
+    15,
+    y
+  );
+
+  y += 10;
+
+  const upcoming =
+    window.currentUpcomingMatches
+      .slice()
+      .sort(
+        (a, b) =>
+          buildDateTime(
+            a.day,
+            a.st
+          ) -
+          buildDateTime(
+            b.day,
+            b.st
+          )
+      );
+
+  let currentDay = null;
+
+  upcoming.forEach(match => {
+
+    const matchDate =
+      buildDateTime(
+        match.day,
+        match.st
+      );
+
+    const dayLabel =
+      matchDate.toLocaleDateString(
+        'en-GB',
+        {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long'
+        }
+      );
+
+    if (dayLabel !== currentDay) {
+
+      currentDay = dayLabel;
+
+      pdf.setFontSize(13);
+
+      pdf.text(
+        currentDay,
+        15,
+        y
+      );
+
+      y += 8;
+    }
+
+    const team1 =
+      getTeamName(
+        match.poule,
+        match.team1
+      );
+
+    const team2 =
+      getTeamName(
+        match.poule,
+        match.team2
+      );
+
+    const field =
+      window.tournamentFields[
+        match.field
+      ]?.name ||
+      match.field;
+
+    pdf.setFontSize(10);
+
+    pdf.text(
+      `${match.st} | ${field}`,
+      20,
+      y
+    );
+
+    y += 5;
+
+    pdf.text(
+      `${team1} vs ${team2}`,
+      25,
+      y
+    );
+
+    y += 8;
+
+  });
+
+  y += 5;
+
+  pdf.setFontSize(16);
+
+  pdf.text(
+    'Referee Games',
+    15,
+    y
+  );
+
+  y += 10;
+
+  window.currentRefereeMatches
+    .forEach(match => {
+
+      const team1 =
+        getTeamName(
+          match.poule,
+          match.team1
+        );
+
+      const team2 =
+        getTeamName(
+          match.poule,
+          match.team2
+        );
+
+      const field =
+        window.tournamentFields[
+          match.field
+        ]?.name ||
+        match.field;
+
+      pdf.setFontSize(10);
+
+      pdf.text(
+        `${match.st} | ${field}`,
+        20,
+        y
+      );
+
+      y += 5;
+
+      pdf.text(
+        `${team1} vs ${team2}`,
+        25,
+        y
+      );
+
+      y += 8;
+
+    });
+
+  y += 10;
+
+  pdf.setFontSize(14);
+
+  pdf.text(
+    'Notes',
+    15,
+    y
+  );
+
+  y += 8;
+
+  pdf.setFontSize(10);
+
+  pdf.text(
+    [
+      'This PDF only contains currently published fixtures.',
+      '',
+      'Additional Day 2 games and referee assignments',
+      'may be released later.',
+      '',
+      'Return to the live schedule for updates.'
+    ],
+    15,
+    y
+  );
+
+  const qrContainer =
+    document.createElement(
+      'div'
+    );
+
+  new QRCode(
+    qrContainer,
+    {
+      text: shareUrl,
+      width: 150,
+      height: 150
+    }
+  );
+
+  const qrImage =
+    qrContainer.querySelector(
+      'img'
+    );
+
+  await new Promise(
+    resolve => {
+
+      const check = () => {
+
+        if (qrImage?.src) {
+          resolve();
+        } else {
+          setTimeout(
+            check,
+            50
+          );
+        }
+
+      };
+
+      check();
+
+    }
+  );
+
+  pdf.addImage(
+    qrImage.src,
+    'PNG',
+    140,
+    220,
+    40,
+    40
+  );
+
+  pdf.text(
+    'Scan for live updates',
+    135,
+    215
+  );
+
+  pdf.save(
+    `${window.tournamentInfo.name} - ${window.selectedTeam.name}.pdf`
+  );
+
+};
 
 document.getElementById('generateBtn').addEventListener('click',generateCalendar);
 document.getElementById('pdfBtn').addEventListener('click',generatePDF);
