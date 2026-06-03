@@ -503,6 +503,9 @@ window.renderTournamentInfo = () => {
 
 const {startDate,endDate,dateText} = getTournamentDates();
 const {location,mapsUrl} = getTournamentLocationInfo();
+  const tournifyUrl = window.selectedTeam
+  ? `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}/team/${window.selectedTeam.id}`
+  : `https://tournifyapp.com/live/${window.tournamentInfo.liveLink}`;
   
   card.innerHTML = `
   <div class="tournament-info-card">
@@ -549,7 +552,7 @@ const {location,mapsUrl} = getTournamentLocationInfo();
         <div class="tournament-info-value">
 
           <a
-            href="https://tournifyapp.com/live/${window.tournamentInfo.liveLink}"
+            href="${tournifyUrl}"
             target="_blank"
             class="tournament-info-link"
           >
