@@ -1564,6 +1564,8 @@ document.addEventListener(
   1500
 );
 
+    renderTournamentInfo();
+
 if (TEAM_ID) {
 
   const team =
