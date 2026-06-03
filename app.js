@@ -1615,7 +1615,6 @@ if (description) {
     wrappedDescription.length * 5 +
     5;
 }
-y += 12;
 
 pdf.setFontSize(11);
 
@@ -1631,8 +1630,8 @@ pdf.setFont(undefined, 'bold');
 pdf.text('Location:', 15, y);
 
 pdf.setFont(undefined, 'normal');
-  pdf.setTextColor(0, 102, 204);
-
+pdf.setTextColor(...tournamentRgb);
+  
 pdf.textWithLink(
   location,
   40,
@@ -1643,10 +1642,10 @@ pdf.textWithLink(
 );
 
 y += 8;
-
+pdf.setTextColor(0, 0, 0);
 pdf.setFont(undefined, 'bold');
 pdf.text('Tournify:', 15, y);
-pdf.setTextColor(0, 102, 204);
+pdf.setTextColor(...tournamentRgb);
 pdf.setFont(undefined, 'normal');
 pdf.textWithLink(
   'Open Tournify page',
@@ -1658,7 +1657,8 @@ pdf.textWithLink(
 );
 
 y += 15;
-
+  
+pdf.setTextColor(0, 0, 0);
 pdf.setFontSize(16);
 pdf.setFont(undefined, 'bold');
 
