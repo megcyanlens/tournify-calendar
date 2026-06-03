@@ -487,17 +487,15 @@ const dateText =
         <div class="tournament-info-value">
 
           <a
-            href="https://www.google.com/maps/place/?q=place_id:${window.tournamentInfo.placeReference}"
+          href="https://www.google.com/maps/place/?q=place_id:${window.tournamentInfo.placeReference}"
             target="_blank"
             class="tournament-info-link"
           >
-            ${[
-              window.tournamentInfo.place,
-              window.tournamentInfo.placeSecondaryName
-            ]
-              .filter(Boolean)
-              .join(', ')}
-          </a>
+            ${window.tournamentInfo.place}
+              ${window.tournamentInfo.placeSecondaryName
+                ? `, ${window.tournamentInfo.placeSecondaryName}`
+                : ''}
+            </a>
 
         </div>
 
