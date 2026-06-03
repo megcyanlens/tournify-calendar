@@ -468,30 +468,21 @@ window.getTournamentDates = () => {
   );
   
   const dateText =
-  startDate.getTime() === endDate.getTime()
-    ? startDate.toLocaleDateString(
-        'en-GB',
-        {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        }
-      )
-    : `${startDate.toLocaleDateString(
-        'en-GB',
-        {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        }
-      )} - ${endDate.toLocaleDateString(
-        'en-GB',
-        {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        }
-      )}`;
+  `${startDate.toLocaleDateString(
+    'en-GB',
+    {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    }
+  )} - ${endDate.toLocaleDateString(
+    'en-GB',
+    {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    }
+  )}`;
   
   return {startDate,endDate, dateText};
 
@@ -511,7 +502,11 @@ window.renderTournamentInfo = () => {
 
   const {startDate,endDate,dateText} = getTournamentDates();
 const {location,mapsUrl} = getTournamentLocationInfo();
-
+const divisionName =
+  window.divisionNames?.[
+    window.selectedTeam.division
+  ] || window.selectedTeam.division;
+  
   card.innerHTML = `
   <div class="tournament-info-card">
 
@@ -1559,7 +1554,7 @@ window.generatePDF = async () => {
 
   const pdf = new jsPDF();
 
-  const {startDate,endDate} = getTournamentDates();
+  const {dateText} = getTournamentDates();
   const {location,mapsUrl} = getTournamentLocationInfo();
 
   const tournamentUrl =
@@ -1570,250 +1565,240 @@ window.generatePDF = async () => {
     `?tournament=${window.tournamentInfo.liveLink}` +
     `&team=${window.selectedTeam.id}`;
 
-  let y = 20;
 
-  pdf.setFontSize(22);
-  pdf.text(
-    window.tournamentInfo.name,
-    15,
-    y
-  );
+let y = 20;
 
-  y += 10;
+pdf.setFontSize(22);
+pdf.setFont(undefined, 'bold');
 
-  pdf.setFontSize(11);
-  pdf.text(
-    `${startDate.toLocaleDateString('en-GB')} - ${endDate.toLocaleDateString('en-GB')}`,
-    15,
-    y
-  );
+pdf.text(
+  window.tournamentInfo.name,
+  15,
+  y
+);
 
-  y += 8;
+y += 12;
 
-  pdf.text(
-    location,
-    15,
-    y
-  );
+pdf.setFontSize(11);
 
-  y += 8;
+pdf.setFont(undefined, 'bold');
+pdf.text('Date(s):', 15, y);
 
-  pdf.text(
-    tournamentUrl,
-    15,
-    y
-  );
+pdf.setFont(undefined, 'normal');
+pdf.text(dateText, 40, y);
 
-  y += 15;
+y += 8;
 
-  pdf.setFontSize(16);
-  pdf.text(
-    'Team Information',
-    15,
-    y
-  );
+pdf.setFont(undefined, 'bold');
+pdf.text('Location:', 15, y);
 
-  y += 10;
+pdf.setFont(undefined, 'normal');
+pdf.textWithLink(
+  location,
+  40,
+  y,
+  {
+    url: mapsUrl
+  }
+);
 
-  pdf.setFontSize(11);
+y += 8;
 
-  pdf.text(
-    `Team: ${window.selectedTeam.name}`,
-    15,
-    y
-  );
+pdf.setFont(undefined, 'bold');
+pdf.text('Tournify:', 15, y);
 
-  y += 7;
+pdf.setFont(undefined, 'normal');
+pdf.textWithLink(
+  'Open Tournament',
+  40,
+  y,
+  {
+    url: tournamentUrl
+  }
+);
 
-  pdf.text(
-    `Division: ${
-      window.divisionNames?.[
-        window.selectedTeam.division
-      ] || window.selectedTeam.division
-    }`,
-    15,
-    y
-  );
+y += 15;
 
-  y += 15;
+pdf.setFontSize(16);
+pdf.setFont(undefined, 'bold');
 
-  pdf.setFontSize(16);
-  pdf.text(
-    'Upcoming Games',
-    15,
-    y
-  );
+pdf.text(
+  'Team Information',
+  15,
+  y
+);
 
-  y += 10;
+y += 10;
 
-  const upcoming =
-    window.currentUpcomingMatches
-      .slice()
-      .sort(
-        (a, b) =>
-          buildDateTime(
-            a.day,
-            a.st
-          ) -
-          buildDateTime(
-            b.day,
-            b.st
-          )
-      );
+pdf.setFontSize(11);
+pdf.setFont(undefined, 'normal');
 
-  let currentDay = null;
+pdf.text(
+  `Team: ${window.selectedTeam.name}`,
+  15,
+  y
+);
 
-  upcoming.forEach(match => {
+y += 7;
 
-    const matchDate =
-      buildDateTime(
-        match.day,
-        match.st
-      );
+pdf.text(
+  `Division: ${divisionName}`,
+  15,
+  y
+);
 
-    const dayLabel =
-      matchDate.toLocaleDateString(
-        'en-GB',
-        {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long'
-        }
-      );
+y += 15;
 
-    if (dayLabel !== currentDay) {
+pdf.setFontSize(16);
+pdf.setFont(undefined, 'bold');
 
-      currentDay = dayLabel;
+pdf.text(
+  'Schedule',
+  15,
+  y
+);
 
-      pdf.setFontSize(13);
+y += 10;
 
-      pdf.text(
-        currentDay,
-        15,
-        y
-      );
+const allEvents = [
 
-      y += 8;
-    }
+  ...window.currentUpcomingMatches.map(
+    match => ({
+      type: 'Playing',
+      ...match
+    })
+  ),
 
-    const team1 =
-      getTeamName(
-        match.poule,
-        match.team1
-      );
+  ...window.currentRefereeMatches.map(
+    match => ({
+      type: 'Refereeing',
+      ...match
+    })
+  )
 
-    const team2 =
-      getTeamName(
-        match.poule,
-        match.team2
-      );
+].sort(
+  (a, b) =>
+    buildDateTime(
+      a.day,
+      a.st
+    ) -
+    buildDateTime(
+      b.day,
+      b.st
+    )
+);
 
-    const field =
-      window.tournamentFields[
-        match.field
-      ]?.name ||
-      match.field;
+let currentDay = '';
 
-    pdf.setFontSize(10);
+const dayGroups = {};
+
+allEvents.forEach(event => {
+
+  const date =
+    buildDateTime(
+      event.day,
+      event.st
+    );
+
+  const dayLabel =
+    date.toLocaleDateString(
+      'en-GB',
+      {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+      }
+    );
+
+  if (!dayGroups[dayLabel]) {
+    dayGroups[dayLabel] = [];
+  }
+
+  dayGroups[dayLabel].push(event);
+
+});
+
+Object.entries(dayGroups)
+  .forEach(([day, events]) => {
+
+    pdf.setFontSize(13);
+    pdf.setFont(undefined, 'bold');
 
     pdf.text(
-      `${match.st} | ${field}`,
-      20,
+      day,
+      15,
       y
     );
 
-    y += 5;
+    y += 6;
 
-    pdf.text(
-      `${team1} vs ${team2}`,
-      25,
-      y
-    );
+    pdf.autoTable({
 
-    y += 8;
+      startY: y,
 
-  });
+      head: [[
+        'Time',
+        'Type',
+        'Field',
+        'Match'
+      ]],
 
-  y += 5;
+      body: events.map(
+        event => [
 
-  pdf.setFontSize(16);
+          event.st,
 
-  pdf.text(
-    'Referee Games',
-    15,
-    y
-  );
+          event.type,
 
-  y += 10;
+          window.tournamentFields[
+            event.field
+          ]?.name || event.field,
 
-  window.currentRefereeMatches
-    .forEach(match => {
+          `${getTeamName(
+            event.poule,
+            event.team1
+          )} vs ${getTeamName(
+            event.poule,
+            event.team2
+          )}`
 
-      const team1 =
-        getTeamName(
-          match.poule,
-          match.team1
-        );
-
-      const team2 =
-        getTeamName(
-          match.poule,
-          match.team2
-        );
-
-      const field =
-        window.tournamentFields[
-          match.field
-        ]?.name ||
-        match.field;
-
-      pdf.setFontSize(10);
-
-      pdf.text(
-        `${match.st} | ${field}`,
-        20,
-        y
-      );
-
-      y += 5;
-
-      pdf.text(
-        `${team1} vs ${team2}`,
-        25,
-        y
-      );
-
-      y += 8;
+        ]
+      )
 
     });
 
-  y += 10;
+    y =
+      pdf.lastAutoTable.finalY +
+      10;
 
-  pdf.setFontSize(14);
+  });
 
-  pdf.text(
-    'Notes',
-    15,
-    y
-  );
+pdf.setFontSize(14);
+pdf.setFont(undefined, 'bold');
 
-  y += 8;
+pdf.text(
+  'Important',
+  15,
+  y
+);
 
-  pdf.setFontSize(10);
+y += 8;
 
-  pdf.text(
-    [
-      'This PDF only contains currently published fixtures.',
-      '',
-      'Additional Day 2 games and referee assignments',
-      'may be released later.',
-      '',
-      'Return to the live schedule for updates.'
-    ],
-    15,
-    y
-  );
+pdf.setFontSize(10);
+pdf.setFont(undefined, 'normal');
 
+pdf.text(
+  [
+    'This PDF only includes games currently published in Tournify.',
+    '',
+    'Additional Day 2 games and referee assignments may be added later.',
+    '',
+    'Scan the QR code for the latest schedule.'
+  ],
+  15,
+  y
+);
+  
   const qrContainer =
     document.createElement(
       'div'
