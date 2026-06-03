@@ -1600,15 +1600,20 @@ temp.innerHTML =
   descriptionHtml;
 
 const description =
-  temp.textContent ||
-  temp.innerText ||
-  '';
-
+  (
+    temp.textContent ||
+    temp.innerText ||
+    ''
+  )
+  .replace(/\n\s*\n/g, '\n')
+  .trim();
+  
+    pdf.setFontSize(11);
+    y += 10;
+    pdf.setFont(undefined, 'normal');
+  
+// Description
 if (description) {
-  y += 10;
-
-  pdf.setFontSize(11);
-  pdf.setFont(undefined, 'normal');
 
   const wrappedDescription =
     pdf.splitTextToSize(
@@ -1624,12 +1629,14 @@ if (description) {
 
   y +=
     wrappedDescription.length * 5 +
-    5;
+    10;
 }
-pdf.setFont(undefined, 'bold');
-pdf.text('Tournify:', 15, y);
-pdf.setTextColor(...tournamentRgb);
-pdf.setFont(undefined, 'normal');
+
+// Tournify URL
+pdf.setTextColor(
+  ...tournamentRgb
+);
+
 pdf.textWithLink(
   tournamentUrl,
   15,
@@ -1639,36 +1646,60 @@ pdf.textWithLink(
   }
 );
 
-const urlWidth =
-  pdf.getTextWidth(
-    tournamentUrl
-  );
-
-pdf.line(
-  15,
-  y + 1,
-  15 + urlWidth,
-  y + 1
+pdf.setTextColor(
+  0,
+  0,
+  0
 );
 
-pdf.setTextColor(0,0,0);
-  
-pdf.setFontSize(11);
+y += 10;
 
-pdf.setFont(undefined, 'bold');
-pdf.text('Date(s):', 15, y);
+// Dates
+pdf.setFont(
+  undefined,
+  'bold'
+);
 
-pdf.setFont(undefined, 'normal');
-pdf.text(dateText, 40, y);
+pdf.text(
+  'Date(s):',
+  15,
+  y
+);
+
+pdf.setFont(
+  undefined,
+  'normal'
+);
+
+pdf.text(
+  dateText,
+  40,
+  y
+);
 
 y += 8;
 
-pdf.setFont(undefined, 'bold');
-pdf.text('Location:', 15, y);
+// Location
+pdf.setFont(
+  undefined,
+  'bold'
+);
 
-pdf.setFont(undefined, 'normal');
-pdf.setTextColor(...tournamentRgb);
-  
+pdf.text(
+  'Location:',
+  15,
+  y
+);
+
+pdf.setFont(
+  undefined,
+  'normal'
+);
+
+pdf.setTextColor(
+  ...tournamentRgb
+);
+
 pdf.textWithLink(
   location,
   40,
@@ -1678,15 +1709,13 @@ pdf.textWithLink(
   }
 );
 
-const locationWidth =
-  pdf.getTextWidth(location);
-
-pdf.line(
-  40,
-  y + 1,
-  40 + locationWidth,
-  y + 1
+pdf.setTextColor(
+  0,
+  0,
+  0
 );
+
+y += 15;
   
 y += 8;
 pdf.setTextColor(0, 0, 0);
