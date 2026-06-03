@@ -1563,9 +1563,9 @@ window.generatePDF = async () => {
     : '';
 
   const tournamentColor =window.tournamentInfo.color || '#0b2d69';
-  const hex =tournamentColor.replace('#', '');
+  const hex = tournamentColor.replace('#', '');
 
-const headerColor = [
+const tournamentRgb  = [
   parseInt(hex.substring(0, 2), 16),
   parseInt(hex.substring(2, 4), 16),
   parseInt(hex.substring(4, 6), 16)
@@ -1783,7 +1783,7 @@ Object.entries(dayGroups)
         'Match'
       ]],
       headStyles: {
-    fillColor: headerColor,
+    fillColor: tournamentRgb,
     textColor: 255,
     fontStyle: 'bold'
   },
