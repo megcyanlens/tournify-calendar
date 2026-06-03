@@ -224,7 +224,40 @@ h3 {
   margin-top: 32px;
   margin-bottom: 12px;
 }
+.button-group {
+  display: flex;
+  gap: 12px;
+}
 
+#pdfBtn {
+  background: #fff;
+  color: var(--tournament-color);
+  border: 2px solid var(--tournament-color);
+  border-radius: 10px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  height: 49px;
+}
+
+#pdfBtn:hover {
+  opacity: .9;
+}
+
+@media (max-width: 768px) {
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  #pdfBtn,
+  #generateBtn {
+    width: 100%;
+  }
+
+}
 /*Tournament Info Card*/
 .tournament-info-card {
   background: white;
@@ -269,6 +302,9 @@ h3 {
   }
 
 }
+
+
+
 
 /* Footer */
 
