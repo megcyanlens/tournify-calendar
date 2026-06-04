@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Tournify Calendar Exporter
+  </title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  />
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+<link
+  rel="stylesheet"
+  href="./styles.css"
+/>
+  
+<link rel="icon" type="image/png" href="/favicon.png">
+
+<meta property="og:title" content="Tournify Calendar Exporter">
+<meta property="og:description" content="Export tournament schedules directly to your calendar.">
+<meta property="og:image" content="https://tournaments.cyanlens.com/social-preview.png">
+<meta property="og:url" content="https://tournaments.cyanlens.com">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tournaments.cyanlens.com/social-preview.png">
+  
+</head>
+
+<body>
+
+  <div class="app">
+
+    <header class="hero">
+
+      <div class="hero__icon">
+        📅
+      </div>
+
+      <div>
+
+        <h1>
+          Tournify Calendar Exporter
+        </h1>
+
+        <h2 id="pageTitle">
+          Loading tournament...
+        </h2>
+
+      </div>
+
+    </header>
+
+<div id="controls">
+
+  <section class="toolbar">
+    
+  <div class="field-group">
+
+    <label>
+      Referee Team
+    </label>
+
+    <input
+      id="refereeSearch"
+      list="refereeList"
+      placeholder="Search referee team..."
+    >
+
+    <datalist id="refereeList"></datalist>
+
+  </div>
+
+  <div class="button-group">
+
+    <button id="generateBtn">
+      📅 Generate Calendar
+    </button>
+
+    <button
+      id="pdfBtn"
+      style="display:none"
+    >
+      📄 Download PDF
+    </button>
+
+  </div>
+
+  </section>
+
+</div>
+
+<div id="results"></div>
+
+<div id="tournamentInfoCard"></div>
+
+<footer class="footer-bar">
+
+  <div class="footer-text">
+    This app was built by
+    <a
+      href="https://www.instagram.com/meg_mac44/"
+      target="_blank"
+      rel="noopener"
+    >
+      Meg MacDonald</a> from <a
+      href="https://www.cyanlens.com"
+      target="_blank"
+      rel="noopener"
+    >
+      Cyan Lens</a>.
+    You're welcome 😜!
+  </div>
+
+  <a
+    class="footer-btn"
+    href="/"
+  >
+    Search all upcoming tournaments
+  </a>
+</footer>
+  </div>
+
+<script src="./overrides.js"></script>
+<script type="module" src="./referee-app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>  
+</body>
+
+</html>
