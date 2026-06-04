@@ -1,3 +1,6 @@
+
+
+
 const params =
   new URLSearchParams(
     window.location.search
@@ -933,6 +936,20 @@ const teamMatches = [
   document.getElementById('generateBtn').style.display = 'block';
   document.getElementById('pdfBtn').style.display = 'block';
 
+  if (isInstagram) {
+
+  const btn =
+    document.getElementById(
+      'generateBtn'
+    );
+
+  btn.innerHTML =
+    '🔒 Open in Browser';
+
+  btn.disabled = false;
+
+}
+
   renderMatches(
   team,
   playingMatches,
@@ -944,6 +961,7 @@ const teamMatches = [
   return teamMatches;
 
 };
+
 window.renderMatches = (
   team,
   playingMatches,
@@ -1026,22 +1044,22 @@ const eventIsOver =
 
 
   
-window.currentUpcomingMatches =
-    upcomingMatches;
+window.currentUpcomingMatches = upcomingMatches;
 
-  window.currentRefereeMatches =
-    upcomingRefereeMatches;
+  window.currentRefereeMatches = upcomingRefereeMatches;
   
-const generateButton =
-  document.getElementById(
-    'generateBtn'
-  );
+const generateButton = document.getElementById('generateBtn');
 
 generateButton.disabled =
   upcomingMatches.length === 0 ||
   eventIsOver;
 
-  if (eventIsOver) {
+  if (isInstagram) {
+
+  generateButton.textContent =
+    '🔒 Open in Browser';
+
+} else if (eventIsOver) {
 
   generateButton.textContent =
     'Event Finished';
@@ -1059,7 +1077,6 @@ generateButton.disabled =
     'Generate Calendar';
 
 }
-
  
   let html = '';
 
@@ -1425,6 +1442,15 @@ function downloadICS(
 }
 
 window.generateCalendar = () => {
+
+if (isInstagram) {
+
+  alert(
+    'Instagram blocks calendar downloads.\n\nTap ⋮ and choose "Open in Browser".'
+  );
+
+  return;
+}
   
 if (!window.selectedTeam) {
   alert('Select a team first');
@@ -2000,6 +2026,11 @@ document.getElementById('generateBtn').style.display = 'none';
 
 document.getElementById('pdfBtn').addEventListener('click',generatePDF);
 document.getElementById('pdfBtn').style.display = 'none';
+
+const isInstagram =
+  navigator.userAgent.includes(
+    'Instagram'
+  );
 
 document.addEventListener(
   'visibilitychange',
