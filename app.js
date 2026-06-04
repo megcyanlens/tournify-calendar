@@ -61,6 +61,8 @@ window.retry = async (
 };
 window.renderTournamentPicker =
   async () => {
+    
+    try {
 
 document.getElementById(
       'results'
@@ -185,6 +187,35 @@ search.addEventListener(
   }
 );
     
+ } catch (e) {
+
+      console.error(
+        'Tournament picker failed',
+        e
+      );
+
+      document.getElementById(
+        'results'
+      ).innerHTML = `
+        <div class="empty-state">
+
+          <div class="empty-state__icon">
+            ⚠️
+          </div>
+
+          <h3>
+            Unable to load tournaments
+          </h3>
+
+          <p>
+            Please refresh and try again.
+          </p>
+
+        </div>
+      `;
+
+    }
+
 };
 
 window.loadTournamentFromLiveLink =
@@ -1446,7 +1477,7 @@ window.generateCalendar = () => {
 if (isInstagram) {
 
   alert(
-    'Instagram blocks calendar downloads.\n\nTap ⋮ and choose "Open in Browser".'
+    'Instagram blocks calendar downloads.\n\nTap ⋮ and choose "Open in external browser".'
   );
 
   return;
