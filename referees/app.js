@@ -28,6 +28,8 @@ import {
   downloadSchedulePdf
 } from '../shared/page.js';
 
+import { showTournamentPicker } from '../shared/picker.js';
+
 const params = new URLSearchParams(window.location.search);
 
 const LIVE_LINK = params.get('tournament');
@@ -171,6 +173,7 @@ reloadOnResumeIfIncomplete(() => !ctx || referees.length > 0);
     ctx = await loadTournamentPage(LIVE_LINK);
 
     if (!ctx) {
+      showTournamentPicker({ notFound: LIVE_LINK });
       return;
     }
 

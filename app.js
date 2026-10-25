@@ -6,6 +6,7 @@ import { getTeams, getMatches, getReferees } from './shared/firebase.js';
 import {
   $,
   escapeHtml,
+  getCountryFlag,
   retry,
   showEmptyState,
   showLoading,
@@ -28,6 +29,8 @@ import {
   downloadCalendar,
   downloadSchedulePdf
 } from './shared/page.js';
+
+import { showTournamentPicker } from './shared/picker.js';
 
 const params = new URLSearchParams(window.location.search);
 
@@ -53,18 +56,6 @@ let selection = null;
 
 function getDivisionName(division) {
   return DIVISION_NAMES[division] || division;
-}
-
-function getCountryFlag(country) {
-  const code = (country || '').trim().toUpperCase();
-
-  if (!/^[A-Z]{2}$/.test(code)) {
-    return code;
-  }
-
-  return [...code]
-    .map(c => String.fromCodePoint(127397 + c.charCodeAt()))
-    .join('');
 }
 
 function setUrlTeam(teamId) {
@@ -275,6 +266,7 @@ reloadOnResumeIfIncomplete(() => !ctx || teams.length > 0);
     ctx = await loadTournamentPage(LIVE_LINK);
 
     if (!ctx) {
+      showTournamentPicker({ notFound: LIVE_LINK });
       return;
     }
 

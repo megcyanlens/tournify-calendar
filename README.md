@@ -10,7 +10,7 @@ Live at <https://tournaments.cyanlens.com>.
 
 | URL | What it does |
 | --- | --- |
-| `/` | Lists tournaments starting in the next 10 days. |
+| `/` | Tournament search: everything on now or in the next 30 days, searchable by name, town or country. Pasting a Tournify live link opens that tournament directly, whatever its date. |
 | `/?tournament=<liveLink>` | Team picker for a tournament. `<liveLink>` is the slug from the Tournify live URL, e.g. `bigbowl2026`. |
 | `/?tournament=<liveLink>&team=<teamId>` | A team's playing and refereeing schedule, with calendar and PDF export. |
 | `/referees/?tournament=<liveLink>&referee=<refereeId>` | A referee's assignments, with calendar and PDF export. |
@@ -25,6 +25,11 @@ from the browser using the Firebase web SDK:
 
 - `tournaments`, which is looked up by `liveLink`
 - `tournaments/<id>/teams`, `matches`, `referees` and `days`
+
+The tournament search is the exception. Full tournament documents are large
+and the web SDK can't fetch only some fields, so `getTournamentsBetween()`
+calls Firestore's REST API with a field mask. That's about a tenth of the
+data for the same date range.
 
 ### Times and time zones
 
@@ -58,11 +63,13 @@ referees/index.html, app.js Referee page
 shared/firebase.js          Firestore queries
 shared/time.js              Time zone and match-day maths
 shared/ics.js               iCalendar writer (escaping, line folding)
+shared/search.js            Tournament search matching and ranking
+shared/picker.js            Tournament search page
 shared/page.js              UI, tournament info card and PDF/ICS export code
                             used by both pages
 styles.css                  Stylesheet for both pages
 overrides.js                Per-tournament fixes (e.g. a better venue address)
-test/                       Unit tests for shared/time.js and shared/ics.js
+test/                       Unit tests for the time, ICS and search code
 ```
 
 ### Tournament overrides
@@ -95,7 +102,8 @@ exported `.ics` should still match the tournament's local schedule.
 
 ### Tests
 
-The time zone and calendar logic have unit tests, which need Node 22 or later:
+The time zone, calendar and search logic have unit tests, which need Node 22
+or later:
 
 ```sh
 node --test test/*.test.mjs
