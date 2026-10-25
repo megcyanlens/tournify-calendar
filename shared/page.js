@@ -1,11 +1,7 @@
 // UI and export code shared by the team page (/) and the referee page
 // (/referees/).
 
-import {
-  findTournament,
-  getUpcomingTournaments,
-  getDays
-} from './firebase.js';
+import { findTournament, getDays } from './firebase.js';
 
 import { createClock, formatCalendarDate } from './time.js';
 import { buildCalendar } from './ics.js';
@@ -25,6 +21,19 @@ export function escapeHtml(value) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+// "DE" -> 🇩🇪; anything that isn't a two-letter code is returned as is.
+export function getCountryFlag(country) {
+  const code = (country || '').trim().toUpperCase();
+
+  if (!/^[A-Z]{2}$/.test(code)) {
+    return code;
+  }
+
+  return [...code]
+    .map(c => String.fromCodePoint(127397 + c.charCodeAt()))
+    .join('');
 }
 
 export async function retry(fn, attempts = 3, delay = 1000) {
@@ -81,74 +90,12 @@ export function showLoadError(error) {
 // ---------------------------------------------------------------------------
 // Tournament loading
 
-function setFooterButtonVisible(visible) {
-  const footerBtn = document.querySelector('.footer-btn');
-
-  if (footerBtn) {
-    footerBtn.style.display = visible ? '' : 'none';
-  }
-}
-
-async function renderTournamentPicker() {
-  $('controls').style.display = 'none';
-  $('tournamentInfoCard').innerHTML = '';
-  $('pageTitle').textContent = 'Find a Tournament';
-  setFooterButtonVisible(false);
-
-  showLoading('Loading tournaments...', 'Fetching upcoming tournaments');
-
-  try {
-    const tournaments = await getUpcomingTournaments();
-
-    showEmptyState({
-      icon: '🏆',
-      title: 'No Tournament Selected',
-      text: 'Search for an upcoming tournament.',
-      extra: `
-        <p class="empty-state__count">
-          ${tournaments.length} upcoming tournaments found
-        </p>
-        <input
-          id="tournamentSearch"
-          list="tournamentList"
-          placeholder="Search tournament..."
-        >
-        <datalist id="tournamentList">
-          ${tournaments
-            .map(t => `<option value="${escapeHtml(t.name)}"></option>`)
-            .join('')}
-        </datalist>
-      `
-    });
-
-    const search = $('tournamentSearch');
-
-    search.addEventListener('change', () => {
-      const selected = tournaments.find(t => t.name === search.value);
-
-      if (selected) {
-        window.location.search =
-          '?tournament=' + encodeURIComponent(selected.liveLink);
-      }
-    });
-  } catch (e) {
-    console.error('Tournament picker failed', e);
-
-    showEmptyState({
-      icon: '⚠️',
-      title: 'Unable to load tournaments',
-      text: 'Please refresh and try again.'
-    });
-  }
-}
-
-// Loads the tournament named by ?tournament=..., or shows the tournament
-// picker and resolves to null when there isn't one.
+// Loads the tournament named by ?tournament=..., or resolves to null when
+// there's no such tournament (the caller then shows the picker).
 export async function loadTournamentPage(liveLink) {
   const tournament = liveLink ? await findTournament(liveLink) : null;
 
   if (!tournament) {
-    await renderTournamentPicker();
     return null;
   }
 

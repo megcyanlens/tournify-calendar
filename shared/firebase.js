@@ -7,8 +7,7 @@ import {
   collection,
   getDocs,
   query,
-  where,
-  orderBy
+  where
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 // Tournify's public web config (the same one its live pages use).
@@ -47,20 +46,84 @@ export async function findTournament(liveLink) {
   return toList(snapshot)[0] || null;
 }
 
-export async function getUpcomingTournaments(days = 10) {
-  const now = Math.floor(Date.now() / 1000);
-  const until = now + days * 24 * 60 * 60;
+const SEARCH_FIELDS = [
+  'name',
+  'liveLink',
+  'date',
+  'place',
+  'placeSecondaryName',
+  'country',
+  'numMatchDays',
+  'timezone'
+];
 
-  const snapshot = await getDocs(
-    query(
-      collection(db, 'tournaments'),
-      where('date', '>=', now),
-      where('date', '<=', until),
-      orderBy('date')
-    )
-  );
+function fromRestValue(value) {
+  if ('integerValue' in value) {
+    return Number(value.integerValue);
+  }
 
-  return toList(snapshot).filter(t => t.liveLink);
+  if ('nullValue' in value) {
+    return null;
+  }
+
+  return Object.values(value)[0];
+}
+
+// Tournaments whose `date` falls between the two unix timestamps, with only
+// the fields the picker needs. Full tournament documents are large (a
+// 30-day window is tens of MB), and the web SDK can't select fields, so
+// this uses Firestore's REST API with a field mask instead.
+export async function getTournamentsBetween(from, until) {
+  const url =
+    `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}` +
+    `/databases/(default)/documents:runQuery?key=${firebaseConfig.apiKey}`;
+
+  const range = (op, seconds) => ({
+    fieldFilter: {
+      field: { fieldPath: 'date' },
+      op,
+      value: { integerValue: String(seconds) }
+    }
+  });
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      structuredQuery: {
+        select: { fields: SEARCH_FIELDS.map(fieldPath => ({ fieldPath })) },
+        from: [{ collectionId: 'tournaments' }],
+        where: {
+          compositeFilter: {
+            op: 'AND',
+            filters: [
+              range('GREATER_THAN_OR_EQUAL', from),
+              range('LESS_THAN_OR_EQUAL', until)
+            ]
+          }
+        },
+        orderBy: [{ field: { fieldPath: 'date' } }]
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Tournament search failed: ${response.status}`);
+  }
+
+  const rows = await response.json();
+
+  return rows
+    .filter(row => row.document)
+    .map(({ document }) => ({
+      id: document.name.split('/').pop(),
+      ...Object.fromEntries(
+        Object.entries(document.fields || {}).map(
+          ([key, value]) => [key, fromRestValue(value)]
+        )
+      )
+    }))
+    .filter(t => t.liveLink);
 }
 
 export function getTeams(tournamentId) {
